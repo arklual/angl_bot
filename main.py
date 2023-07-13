@@ -68,7 +68,7 @@ async def has_cursed_word(text):
     words = text.split(' ')
     cursed_words = []
     async with aiofiles.open('stop_words.txt', 'r') as fp:
-        cursed_words = fp.readlines()
+        cursed_words = (await fp.read()).split()
     for word in words:
         if word in cursed_words:
             return True

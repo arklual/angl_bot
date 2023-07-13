@@ -11,6 +11,7 @@ import aiohttp
 import os
 import json
 import random
+import openai
 
 
 bot = aiogram.Bot(TOKEN, parse_mode=ParseMode.HTML)
@@ -95,26 +96,29 @@ async def is_context_exist(chat_id):
             return True
     return False
 
-async def append_context(chat_id, context):
+async def append_messages(chat_id, messages):
     data = []
     async with aiofiles.open(str(chat_id)+'.json', 'r') as fp:
         data = json.loads(await fp.read())
-    data += context
+    data['messages'] += messages
     await create_new_context(chat_id=chat_id, context=data)
 
 async def create_new_context(chat_id, context):
     '''
     FORMAT:
-    [
-        {
-            "from": "user",
-            "message": "..."
-        },
-        {
-            "from": "bot",
-            "message": "..."
-        }
-    ]
+    {
+        messages: [
+            {
+                "from": "user",
+                "message": "..."
+            },
+            {
+                "from": "bot",
+                "message": "..."
+            }
+        ],
+        mode: '...'
+    }
     '''
     async with aiofiles.open(str(chat_id)+'.json', 'w') as fp:
         await fp.write(json.dumps(context))
@@ -134,7 +138,7 @@ async def admin(message: Message):
     await message.answer('Что вы хотите сделать?', reply_markup=keyboard)
 
 @dp.callback_query_handler(text='change_prompt')
-async def change_prompt(callback: CallbackQuery):
+async def change_prompt_free(callback: CallbackQuery):
     if str(callback.from_user.id) not in ADMINS_ID:
         await callback.message.answer('Только админ может менять промпт')
         return
@@ -142,12 +146,21 @@ async def change_prompt(callback: CallbackQuery):
     await PromtForm.prompt.set()
 
 @dp.message_handler(state=PromtForm.prompt)
-async def process_new_prompt(message: Message, state: FSMContext):
+async def process_new_prompt_free(message: Message, state: FSMContext):
     prompt = message.text
     await state.finish()
-    async with aiofiles.open('prompt.txt', 'w') as fp:
+    async with aiofiles.open('prompt_free.txt', 'w') as fp:
         await fp.write(prompt)
     await message.answer('Промпт успешно обновлён!')
+
+####################HANDLIG DIALOG#####################################
+@dp.message_handler()
+async def handle_all_messages(message: Message):
+    if await has_cursed_word(message.text):
+        await message.answer('Прошу вести корректный диалог или Попробуйте сформулировать ответ без использования запрещенных слов, мы не поддерживаем беседы на данную тему\n\n-----\n\nI ask you to conduct a correct dialogue or try to formulate an answer without using forbidden words. We do not support conversations on this topic')
+        return
+    response = ''
+    #await message.answer(response, parse_mode=ParseMode.MARKDOWN)
 
 
 executor.start_polling(dp)

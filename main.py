@@ -8,6 +8,7 @@ from settings import *
 from strings import *
 import aiofiles
 import aiohttp
+import os
 import json
 import random
 
@@ -63,6 +64,15 @@ async def talk(message: Message):
 
 ###################TOOLS###########################################
 
+async def has_cursed_word(text):
+    words = text.split(' ')
+    cursed_words = []
+    async with aiofiles.open('stop_words.txt', 'r') as fp:
+        cursed_words = fp.readlines()
+    for word in words:
+        if word in cursed_words:
+            return True
+    return False
 
 async def text_to_speech_send(chat_id, text):
     headers = {"Accept": "application/json", "Content-Type": "application/json",
@@ -75,10 +85,39 @@ async def text_to_speech_send(chat_id, text):
     url = "https://api.voice.steos.io/v1/get/tts"
     async with aiohttp.ClientSession() as session:
         async with session.post(url, headers=headers, data=json.dumps(body)) as response:
-            print(await response.text())
             data = await response.json()
             await bot.send_voice(chat_id, data['audio_url'])
 
+async def is_context_exist(chat_id):
+    files = os.listdir()
+    for file in files:
+        if str(chat_id)+'.json' == file:
+            return True
+    return False
+
+async def append_context(chat_id, context):
+    data = []
+    async with aiofiles.open(str(chat_id)+'.json', 'r') as fp:
+        data = json.loads(await fp.read())
+    data += context
+    await create_new_context(chat_id=chat_id, context=data)
+
+async def create_new_context(chat_id, context):
+    '''
+    FORMAT:
+    [
+        {
+            "from": "user",
+            "message": "..."
+        },
+        {
+            "from": "bot",
+            "message": "..."
+        }
+    ]
+    '''
+    async with aiofiles.open(str(chat_id)+'.json', 'w') as fp:
+        await fp.write(json.dumps(context))
 
 ###################ADMIN MENU######################################
 

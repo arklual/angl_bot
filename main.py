@@ -103,6 +103,11 @@ async def append_messages(chat_id, messages):
     data['messages'] += messages
     await create_new_context(chat_id=chat_id, context=data)
 
+async def get_context(chat_id):
+    async with aiofiles.open(str(chat_id)+'.json', 'r') as fp:
+        data = json.loads(await fp.read())
+        return data
+
 async def create_new_context(chat_id, context):
     '''
     FORMAT:
@@ -113,7 +118,7 @@ async def create_new_context(chat_id, context):
                 "message": "..."
             },
             {
-                "from": "bot",
+                "from": "assistant",
                 "message": "..."
             }
         ],
@@ -122,7 +127,10 @@ async def create_new_context(chat_id, context):
     '''
     async with aiofiles.open(str(chat_id)+'.json', 'w') as fp:
         await fp.write(json.dumps(context))
-
+    
+async def get_prompt(mode):
+    async with aiofiles.open('prompt_'+mode+'.txt', 'r') as fp:
+        return await fp.read()
 ###################ADMIN MENU######################################
 
 class PromtFreeForm(StatesGroup):
@@ -197,8 +205,21 @@ async def handle_all_messages(message: Message):
     if await has_cursed_word(message.text):
         await message.answer('Прошу вести корректный диалог или Попробуйте сформулировать ответ без использования запрещенных слов, мы не поддерживаем беседы на данную тему\n\n-----\n\nI ask you to conduct a correct dialogue or try to formulate an answer without using forbidden words. We do not support conversations on this topic')
         return
-    response = ''
-    #await message.answer(response, parse_mode=ParseMode.MARKDOWN)
+    data = []
+    user_id = message.from_user.id
+    if await is_context_exist(user_id):
+        context = await get_context(user_id)
+        mode = context['mode']
+        data.append({"role": "system", "content": await get_prompt(mode)})
+        for m in context['messages']:
+            data.append({"role": m['from'], "content": m['message']})
+        completion = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=data
+        )
+        response = completion['choices'][0]['message']['content']
+        await message.answer(response, parse_mode=ParseMode.MARKDOWN)
+        await append_messages(user_id, [{"from": "assistant", "message": response}])
 
 
 executor.start_polling(dp)

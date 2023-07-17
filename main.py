@@ -125,7 +125,11 @@ async def create_new_context(chat_id, context):
 
 ###################ADMIN MENU######################################
 
-class PromtForm(StatesGroup):
+class PromtFreeForm(StatesGroup):
+    prompt = State()
+class PromtPronForm(StatesGroup):
+    prompt = State()
+class PromtGramForm(StatesGroup):
     prompt = State()
 
 @dp.message_handler(commands=['admin'])
@@ -134,22 +138,56 @@ async def admin(message: Message):
         await message.answer('Вы не админ')
         return
     keyboard = InlineKeyboardMarkup()
-    keyboard.add(InlineKeyboardButton('Изменить промпт', callback_data='change_prompt'))
+    keyboard.add(InlineKeyboardButton('Изменить промпт свободного диалога', callback_data='change_prompt_free'))
+    keyboard.add(InlineKeyboardButton('Изменить промпт произношения', callback_data='change_prompt_pron'))
+    keyboard.add(InlineKeyboardButton('Изменить промпт грамматики', callback_data='change_prompt_gram'))
     await message.answer('Что вы хотите сделать?', reply_markup=keyboard)
 
-@dp.callback_query_handler(text='change_prompt')
+@dp.callback_query_handler(text='change_prompt_free')
 async def change_prompt_free(callback: CallbackQuery):
     if str(callback.from_user.id) not in ADMINS_ID:
         await callback.message.answer('Только админ может менять промпт')
         return
     await callback.message.answer('Отправьте новый промпт')
-    await PromtForm.prompt.set()
+    await PromtFreeForm.prompt.set()
 
-@dp.message_handler(state=PromtForm.prompt)
+@dp.message_handler(state=PromtFreeForm.prompt)
 async def process_new_prompt_free(message: Message, state: FSMContext):
     prompt = message.text
     await state.finish()
     async with aiofiles.open('prompt_free.txt', 'w') as fp:
+        await fp.write(prompt)
+    await message.answer('Промпт успешно обновлён!')
+
+@dp.callback_query_handler(text='change_prompt_gram')
+async def change_prompt_gram(callback: CallbackQuery):
+    if str(callback.from_user.id) not in ADMINS_ID:
+        await callback.message.answer('Только админ может менять промпт')
+        return
+    await callback.message.answer('Отправьте новый промпт')
+    await PromtGramForm.prompt.set()
+
+@dp.message_handler(state=PromtGramForm.prompt)
+async def process_new_prompt_gram(message: Message, state: FSMContext):
+    prompt = message.text
+    await state.finish()
+    async with aiofiles.open('prompt_grammar.txt', 'w') as fp:
+        await fp.write(prompt)
+    await message.answer('Промпт успешно обновлён!')
+
+@dp.callback_query_handler(text='change_prompt_pron')
+async def change_prompt_pron(callback: CallbackQuery):
+    if str(callback.from_user.id) not in ADMINS_ID:
+        await callback.message.answer('Только админ может менять промпт')
+        return
+    await callback.message.answer('Отправьте новый промпт')
+    await PromtPronForm.prompt.set()
+
+@dp.message_handler(state=PromtPronForm.prompt)
+async def process_new_prompt_free(message: Message, state: FSMContext):
+    prompt = message.text
+    await state.finish()
+    async with aiofiles.open('prompt_pronoun.txt', 'w') as fp:
         await fp.write(prompt)
     await message.answer('Промпт успешно обновлён!')
 

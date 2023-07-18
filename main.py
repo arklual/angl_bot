@@ -77,7 +77,7 @@ async def talk(message: Message):
 ###################TOOLS###########################################
 async def change_mode(user_id, mode):
     data = {}
-    async with aiofiles.open(f'data/{user_id}.json', 'r') as file:
+    async with aiofiles.open(f'data/{user_id}.json', 'r', encoding='utf-8') as file:
         data = json.loads(await file.read())
     data['mode'] = mode
     await create_new_context(user_id, data)
@@ -86,7 +86,7 @@ async def change_mode(user_id, mode):
 async def has_cursed_word(text):
     words = text.split(' ')
     cursed_words = []
-    async with aiofiles.open('stop_words.txt', 'r') as fp:
+    async with aiofiles.open('stop_words.txt', 'r', encoding='utf-8') as fp:
         cursed_words = (await fp.read()).split()
     for word in words:
         if word in cursed_words:
@@ -117,13 +117,13 @@ async def is_context_exist(chat_id):
 
 async def append_messages(chat_id, messages):
     data = []
-    async with aiofiles.open('data/'+str(chat_id)+'.json', 'r') as fp:
+    async with aiofiles.open('data/'+str(chat_id)+'.json', 'r', encoding='utf-8') as fp:
         data = json.loads(await fp.read())
     data['messages'] += messages
     await create_new_context(chat_id=chat_id, context=data)
 
 async def get_context(chat_id):
-    async with aiofiles.open('data/'+str(chat_id)+'.json', 'r') as fp:
+    async with aiofiles.open('data/'+str(chat_id)+'.json', 'r', encoding='utf-8') as fp:
         data = json.loads(await fp.read())
         return data
 
@@ -144,7 +144,7 @@ async def create_new_context(chat_id, context):
         mode: '...'
     }
     '''
-    async with aiofiles.open('data/'+str(chat_id)+'.json', 'w') as fp:
+    async with aiofiles.open('data/'+str(chat_id)+'.json', 'w', encoding='utf-8') as fp:
         await fp.write(json.dumps(context, ensure_ascii=False))
 
 async def request_to_gpt(user_id, text):
@@ -172,7 +172,7 @@ async def request_to_gpt(user_id, text):
     return response
     
 async def get_prompt(mode):
-    async with aiofiles.open('prompt_'+mode+'.txt', 'r') as fp:
+    async with aiofiles.open('prompt_'+mode+'.txt', 'r', encoding='utf-8') as fp:
         return await fp.read()
 ###################ADMIN MENU######################################
 
@@ -188,11 +188,11 @@ async def admin(message: Message):
     if str(message.from_user.id) not in ADMINS_ID:
         await message.answer('Вы не админ')
         return
-    async with aiofiles.open('prompt_free.txt', 'r') as fp:
+    async with aiofiles.open('prompt_free.txt', 'r', encoding='utf-8') as fp:
         cur_free_prompt = await fp.read()
-    async with aiofiles.open('prompt_grammar.txt', 'r') as fp:
+    async with aiofiles.open('prompt_grammar.txt', 'r', encoding='utf-8') as fp:
         cur_grammar_prompt = await fp.read()
-    async with aiofiles.open('prompt_pronoun.txt', 'r') as fp:
+    async with aiofiles.open('prompt_pronoun.txt', 'r', encoding='utf-8') as fp:
         cur_pronoun_prompt = await fp.read()
     await message.answer('Текущий промпт свободного диалога: \n' + cur_free_prompt + "\n\n\n" + 'Текущий промпт грамматики: \n' + cur_grammar_prompt + '\n\n\n' + 'Текущий промпт произношения: \n' + cur_pronoun_prompt)
 
@@ -215,7 +215,7 @@ async def change_prompt_free(callback: CallbackQuery):
 async def process_new_prompt_free(message: Message, state: FSMContext):
     prompt = message.text
     await state.finish()
-    async with aiofiles.open('prompt_free.txt', 'w') as fp:
+    async with aiofiles.open('prompt_free.txt', 'w', encoding='utf-8') as fp:
         await fp.write(prompt)
     await message.answer('Промпт успешно обновлён!')
 
@@ -231,7 +231,7 @@ async def change_prompt_gram(callback: CallbackQuery):
 async def process_new_prompt_gram(message: Message, state: FSMContext):
     prompt = message.text
     await state.finish()
-    async with aiofiles.open('prompt_grammar.txt', 'w') as fp:
+    async with aiofiles.open('prompt_grammar.txt', 'w', encoding='utf-8') as fp:
         await fp.write(prompt)
     await message.answer('Промпт успешно обновлён!')
 
@@ -247,7 +247,7 @@ async def change_prompt_pron(callback: CallbackQuery):
 async def process_new_prompt_free(message: Message, state: FSMContext):
     prompt = message.text
     await state.finish()
-    async with aiofiles.open('prompt_pronoun.txt', 'w') as fp:
+    async with aiofiles.open('prompt_pronoun.txt', 'w', encoding='utf-8') as fp:
         await fp.write(prompt)
     await message.answer('Промпт успешно обновлён!')
 

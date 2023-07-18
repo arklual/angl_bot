@@ -164,7 +164,7 @@ async def request_to_gpt(user_id, text):
     data.append({"role": "user", "content": text})
     await append_messages(user_id, [{'from': 'user', "message": text}])
     completion = openai.ChatCompletion.create(
-        model="gpt-3.5",
+        model="gpt-3.5-turbo",
         messages=data
     )
     response = completion['choices'][0]['message']['content']

@@ -1,6 +1,12 @@
 START_MESSAGES = [
-     'Привет! С вами виртуальный носитель английского языка на базе\
-    искусственного интеллекта. Модель chatGPT любит общаться с Вами на любую тему,\
-    ответит на любой вопрос, а также подкорректирует Вашу грамматику и произношение в процессе диалога.'
-    
+"Всем привет! На сегодняшний день у вас есть репетитор по английскому языку, основанный на модели chatGPT. Пожалуйста, не стесняйтесь спрашивать меня о ваших советах по грамматике и произношению. Я помогу вам или просто поговорю по-английски!",
+"Здравствуйте, это ваш личный репетитор по английскому языку. Вы можете говорить, тренироваться и проверять свои грамматические навыки вместе со мной. Также вы проверяете свое произношение, и я говорю вам, все ли в порядке. Давайте начнем, что вы выберете?",
+'Привет! Я буду вашим личным носителем английского языка. Вы можете говорить со мной на любую тему, какую захотите, потому что я не человек - я робот, который был создан по модели chatGPT. Давайте говорить и развлекаться!',
+'Приятно с вами познакомиться! Я преподаватель английского языка в chatGPT, и я буду общаться с вами как ваш личный носитель языка. Пожалуйста, скажите, что вы хотите обсудить, и я, кроме того, проверю ваши знания английского, если вы захотите.',
+"Хорошего дня! Я - искусственный интеллект в роли носителя языка, и я могу слышать, свободно говорить с вами по-английски. Также я проконсультирую вас относительно ваших навыков грамматики и произношения, если вы хотите."
+"Hi there! There is your English Tutor based on chatGPT model for today. Please do no hesitate to ask me about your grammar & pronunciation tips. I`ll help you with or just talk in English!",
+"Hello, this is your personal tutor of English skills. You can speak, train and check your grammar skills with me. Also you check your pronuciation and i tell you, if it Ok. Let`s start, what will you choose?",
+"Hi! I`ll be your personal English native speaker. You can speak with me any topic you want cause i`m not a human - i`m a robot which was born from chatGPT model. Let`s speak and entertain!",
+"Nice to meet you! I`m chatGPT English tutor and i will chat you as your personal native speaker. Please tell what do you want to discuss and i besides check your English skills if you want to.",
+"Have a nice day! I am Artificial Intelligence in role of native speaker, and i can hear, speak English with you freely. Also i will advise you regarding your grammar & pronunciation skills if you want.",
 ]

@@ -13,6 +13,7 @@ import json
 import random
 import openai
 
+openai.api_key = OPEAI_TOKEN
 
 bot = aiogram.Bot(TOKEN, parse_mode=ParseMode.HTML)
 storage = MemoryStorage()
@@ -92,19 +93,19 @@ async def text_to_speech_send(chat_id, text):
 async def is_context_exist(chat_id):
     files = os.listdir()
     for file in files:
-        if str(chat_id)+'.json' == file:
+        if 'data/'+str(chat_id)+'.json' == file:
             return True
     return False
 
 async def append_messages(chat_id, messages):
     data = []
-    async with aiofiles.open(str(chat_id)+'.json', 'r') as fp:
+    async with aiofiles.open('data/'+str(chat_id)+'.json', 'r') as fp:
         data = json.loads(await fp.read())
     data['messages'] += messages
     await create_new_context(chat_id=chat_id, context=data)
 
 async def get_context(chat_id):
-    async with aiofiles.open(str(chat_id)+'.json', 'r') as fp:
+    async with aiofiles.open('data/'+str(chat_id)+'.json', 'r') as fp:
         data = json.loads(await fp.read())
         return data
 
@@ -125,7 +126,7 @@ async def create_new_context(chat_id, context):
         mode: '...'
     }
     '''
-    async with aiofiles.open(str(chat_id)+'.json', 'w') as fp:
+    async with aiofiles.open('data/'+str(chat_id)+'.json', 'w') as fp:
         await fp.write(json.dumps(context))
     
 async def get_prompt(mode):
@@ -209,17 +210,26 @@ async def handle_all_messages(message: Message):
     user_id = message.from_user.id
     if await is_context_exist(user_id):
         context = await get_context(user_id)
-        mode = context['mode']
-        data.append({"role": "system", "content": await get_prompt(mode)})
-        for m in context['messages']:
-            data.append({"role": m['from'], "content": m['message']})
-        completion = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=data
-        )
-        response = completion['choices'][0]['message']['content']
-        await message.answer(response, parse_mode=ParseMode.MARKDOWN)
-        await append_messages(user_id, [{"from": "assistant", "message": response}])
+    else:
+        context = {
+            'messages':[],
+            'mode': 'grammar'
+        }
+        await create_new_context(message.from_user.id, context)
+    mode = context['mode']
+    data.append({"role": "system", "content": await get_prompt(mode)})
+    for m in context['messages']:
+        data.append({"role": m['from'], "content": m['message']})
+    data.append({"role": "user", "content": message.text})
+    await append_messages(user_id, [{'from': 'user', "message": message.text}])
+    completion = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=data
+    )
+    response = completion['choices'][0]['message']['content']
+    await message.answer(response, parse_mode=ParseMode.MARKDOWN)
+    await append_messages(user_id, [{"from": "assistant", "message": response}])
+
 
 
 executor.start_polling(dp)

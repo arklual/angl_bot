@@ -38,7 +38,7 @@ async def start(message: Message):
         'mode': 'grammar'
     }
     await create_new_context(message.from_user.id, context)
-    await message.answer(START_MESSAGES[random.randint(0, len(START_MESSAGES)-1)])
+    await message.answer(START_MESSAGES_RU[random.randint(0, len(START_MESSAGES_RU)-1)])
 
 @dp.message_handler(commands=['stop'])
 async def stop(message: Message):
@@ -87,7 +87,7 @@ async def has_cursed_word(text):
     words = text.split(' ')
     cursed_words = []
     async with aiofiles.open('stop_words.txt', 'r', encoding='utf-8') as fp:
-        cursed_words = (await fp.read()).split()
+        cursed_words = (await fp.read()).split(',')
     for word in words:
         if word in cursed_words:
             return True
@@ -105,7 +105,6 @@ async def text_to_speech_send(chat_id, text):
     async with aiohttp.ClientSession() as session:
         async with session.post(url, headers=headers, data=json.dumps(body, ensure_ascii=False)) as response:
             data = await response.json()
-            print(data)
             await bot.send_voice(chat_id, data['audio_url'])
 
 async def is_context_exist(chat_id):

@@ -121,7 +121,7 @@ async def text_to_speech_send(chat_id, text):
             data = urlopen(data['audio_url']).read()
             f = tempfile.NamedTemporaryFile(delete=False)
             f.write(data)
-            AudioSegment.from_mp3(f.name).export(f'answers/result{chat_id}.ogg', format='ogg')
+            os.system(f'ffmpeg -i {f.name} -c:a libvorbis -q:a 4 answers/result{chat_id}.ogg')
             f.close()
             with open(f'answers/result{chat_id}.ogg', 'rb') as fp:
                 await bot.send_voice(chat_id, fp)

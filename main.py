@@ -130,7 +130,7 @@ async def text_to_speech_send(chat_id, text):
     headers = {"Accept": "application/json", "Content-Type": "application/json",
                "Authorization": CYBERVOICE_TOKEN}
 
-    body = {'voice_id': await get_context(chat_id)['voice'],
+    body = {'voice_id': (await get_context(chat_id))['voice'],
             'text': text,
             'format': 'mp3'}
 

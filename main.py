@@ -17,6 +17,8 @@ import traceback
 import speech_recognition as sr 
 from pydub import AudioSegment
 import tiktoken
+import tempfile
+from urllib.request import urlopen
 
 openai.api_key = OPEAI_TOKEN
 bot = aiogram.Bot(TOKEN, parse_mode=ParseMode.HTML)
@@ -52,15 +54,24 @@ async def reset(message: Message):
 
 @dp.message_handler(commands=['help'])
 async def help(message: Message):
-    await message.answer("Пошел нахй")
+    await message.answer("help")
 
 @dp.message_handler(commands=['menu'])
 async def menu(message: Message):
     pass
 
+class VoiceForm(StatesGroup):
+    voice = State()
+
 @dp.message_handler(commands=['voice'])
 async def voice(message: Message):
-    pass
+    kb = ReplyKeyboardMarkup([
+        [],
+        [],
+        []
+    ])
+    await message.answer("Выберите голос")
+    #await VoiceForm.voice.set()
 
 @dp.message_handler(commands=['grammar'])
 async def grammar(message: Message):
@@ -107,7 +118,14 @@ async def text_to_speech_send(chat_id, text):
     async with aiohttp.ClientSession() as session:
         async with session.post(url, headers=headers, data=json.dumps(body, ensure_ascii=False)) as response:
             data = await response.json()
-            await bot.send_voice(chat_id, data['audio_url'])
+            data = urlopen(['audio_url']).read()
+            f = tempfile.NamedTemporaryFile(delete=False)
+            f.write(data)
+            AudioSegment.from_mp3(f.name).export(f'answers/result{chat_id}.ogg', format='ogg')
+            f.close()
+            with open(f'answers/result{chat_id}.ogg', 'rb') as fp:
+                await bot.send_voice(chat_id, fp)
+            os.remove(f'answers/result{chat_id}.ogg')
 
 async def is_context_exist(chat_id):
     files = os.listdir(path='data')

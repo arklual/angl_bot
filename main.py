@@ -48,6 +48,7 @@ async def stop(message: Message):
 @dp.message_handler(commands=['reset'])
 async def reset(message: Message):
     await create_new_context(message.from_user.id, {'messages': [], 'mode': 'grammar'})
+    await message.answer("You have started a new session")
 
 @dp.message_handler(commands=['help'])
 async def help(message: Message):

@@ -159,7 +159,6 @@ async def request_to_gpt(user_id, text):
         }
         await create_new_context(user_id, context)
     mode = context['mode']
-    token_counter = 0 
     data_in_str = ''
     prompt = await get_prompt(mode)
     data_in_str += prompt
@@ -290,7 +289,7 @@ async def voice_to_text(message: Message):
     with sr.AudioFile(f'voices/voice{message.from_user.id}.wav') as source:
         audio_text = r.listen(source)
         try:
-            text = r.recognize_google(audio_text, language='ru')
+            text = r.recognize_google(audio_text, language='eng')
             if await has_cursed_word(text):
                 await text_to_speech_send(message.chat.id, "Прошу вести корректный диалог или Попробуйте сформулировать ответ без использования запрещенных слов, мы не поддерживаем беседы на данную тему\n\n-----\n\nI ask you to conduct a correct dialogue or try to formulate an answer without using forbidden words. We do not support conversations on this topic")
             response = await request_to_gpt(message.from_user.id, text)

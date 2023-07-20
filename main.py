@@ -16,6 +16,7 @@ import openai
 import traceback
 import speech_recognition as sr 
 from pydub import AudioSegment
+import tiktoken
 
 openai.api_key = OPEAI_TOKEN
 bot = aiogram.Bot(TOKEN, parse_mode=ParseMode.HTML)
@@ -157,9 +158,31 @@ async def request_to_gpt(user_id, text):
         }
         await create_new_context(user_id, context)
     mode = context['mode']
-    data.append({"role": "system", "content": await get_prompt(mode)})
+    token_counter = 0 
+    data_in_str = ''
+    prompt = await get_prompt(mode)
+    data_in_str += prompt
+    data.append({"role": "system", "content": prompt})
     for m in context['messages']:
         data.append({"role": m['from'], "content": m['message']})
+        data_in_str += m['message']
+    encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
+    num_tokens = len(encoding.encode(data_in_str))
+    if num_tokens >= 3900:
+        data[0] = {"role": "system", "content": 'summarize all this dialog'}
+        completion = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=data
+        )
+        response = completion['choices'][0]['message']['content']
+        context = {
+            'messages':[{"role": 'user', "content": response}],
+            'mode': mode
+        }
+        await create_new_context(user_id, context)
+        data.append({"role": "system", "content": prompt})
+        for m in context['messages']:
+            data.append({"role": m['from'], "content": m['message']})
     data.append({"role": "user", "content": text})
     await append_messages(user_id, [{'from': 'user', "message": text}])
     completion = openai.ChatCompletion.create(

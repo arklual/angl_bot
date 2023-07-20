@@ -108,9 +108,10 @@ async def text_to_speech_send(chat_id, text):
             await bot.send_voice(chat_id, data['audio_url'])
 
 async def is_context_exist(chat_id):
-    files = os.listdir()
+    files = os.listdir(path='data')
     for file in files:
-        if 'data/'+str(chat_id)+'.json' == file:
+        print(file)
+        if str(chat_id)+'.json' == file:
             return True
     return False
 
@@ -149,8 +150,10 @@ async def create_new_context(chat_id, context):
 async def request_to_gpt(user_id, text):
     data = []
     if await is_context_exist(user_id):
+        print(1)
         context = await get_context(user_id)
     else:
+        print(2)
         context = {
             'messages':[],
             'mode': 'grammar'

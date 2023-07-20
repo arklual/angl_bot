@@ -118,7 +118,7 @@ async def text_to_speech_send(chat_id, text):
     async with aiohttp.ClientSession() as session:
         async with session.post(url, headers=headers, data=json.dumps(body, ensure_ascii=False)) as response:
             data = await response.json()
-            data = urlopen(['audio_url']).read()
+            data = urlopen(data['audio_url']).read()
             f = tempfile.NamedTemporaryFile(delete=False)
             f.write(data)
             AudioSegment.from_mp3(f.name).export(f'answers/result{chat_id}.ogg', format='ogg')

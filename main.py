@@ -38,7 +38,8 @@ async def test(message: Message):
 async def start(message: Message):
     context = {
         'messages':[],
-        'mode': 'grammar'
+        'mode': 'grammar',
+        'voice': 1,
     }
     await create_new_context(message.from_user.id, context)
     await message.answer(START_MESSAGES_RU[random.randint(0, len(START_MESSAGES_RU)-1)])
@@ -49,7 +50,8 @@ async def stop(message: Message):
 
 @dp.message_handler(commands=['reset'])
 async def reset(message: Message):
-    await create_new_context(message.from_user.id, {'messages': [], 'mode': 'grammar'})
+    context = await get_context(message.from_user.id) 
+    await create_new_context(message.from_user.id, {'messages': [], 'mode': 'grammar', 'voice': context['voice'],})
     await message.answer("You have started a new session")
 
 @dp.message_handler(commands=['help'])
@@ -65,13 +67,24 @@ class VoiceForm(StatesGroup):
 
 @dp.message_handler(commands=['voice'])
 async def voice(message: Message):
+    voices = await get_voices()
     kb = ReplyKeyboardMarkup([
-        [],
-        [],
-        []
-    ])
-    await message.answer("Выберите голос")
-    #await VoiceForm.voice.set()
+        [v['name']['EN']] for v in voices
+    ], resize_keyboard=True)
+    await message.answer("Выберите голос", reply_markup=kb)
+    await VoiceForm.voice.set()
+
+@dp.message_handler(state=VoiceForm.voice)
+async def process_new_voice(message: Message, state: FSMContext):
+    voice = message.text
+    await state.finish()
+    voices = await get_voices()
+    for v in voices:
+        if str(v['name']['EN']) == str(voice):
+            await change_voice(message.from_user.id, int(v['voice_id']))
+            await message.answer(f'Голос успешно сменен на {voice}!')
+            return
+
 
 @dp.message_handler(commands=['grammar'])
 async def grammar(message: Message):
@@ -95,6 +108,13 @@ async def change_mode(user_id, mode):
     data['mode'] = mode
     await create_new_context(user_id, data)
         
+async def change_voice(user_id, voice):
+    data = {}
+    async with aiofiles.open(f'data/{user_id}.json', 'r', encoding='utf-8') as file:
+        data = json.loads(await file.read())
+    data['voice'] = voice
+    await create_new_context(user_id, data)
+
 
 async def has_cursed_word(text):
     words = text.split(' ')
@@ -110,7 +130,7 @@ async def text_to_speech_send(chat_id, text):
     headers = {"Accept": "application/json", "Content-Type": "application/json",
                "Authorization": CYBERVOICE_TOKEN}
 
-    body = {'voice_id': 1,
+    body = {'voice_id': await get_context(chat_id)['voice'],
             'text': text,
             'format': 'mp3'}
 
@@ -126,6 +146,19 @@ async def text_to_speech_send(chat_id, text):
             with open(f'answers/result{chat_id}.ogg', 'rb') as fp:
                 await bot.send_voice(chat_id, fp)
             os.remove(f'answers/result{chat_id}.ogg')
+
+
+async def get_voices():
+    headers = {"Accept": "application/json", "Content-Type": "application/json",
+               "Authorization": CYBERVOICE_TOKEN}
+
+    url = "https://api.voice.steos.io/v1/get/voices"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url, headers=headers) as response:
+            data = await response.json()
+            return data['voices']
+
+
 
 async def is_context_exist(chat_id):
     files = os.listdir(path='data')
@@ -160,7 +193,8 @@ async def create_new_context(chat_id, context):
                 "message": "..."
             }
         ],
-        mode: '...'
+        mode: '...',
+        voice: 1,
     }
     '''
     async with aiofiles.open('data/'+str(chat_id)+'.json', 'w', encoding='utf-8') as fp:
@@ -171,11 +205,7 @@ async def request_to_gpt(user_id, text):
     if await is_context_exist(user_id):
         context = await get_context(user_id)
     else:
-        context = {
-            'messages':[],
-            'mode': 'grammar'
-        }
-        await create_new_context(user_id, context)
+        await bot.send_message('Вы не начинали диалог ещё')
     mode = context['mode']
     data_in_str = ''
     prompt = await get_prompt(mode)
@@ -193,9 +223,11 @@ async def request_to_gpt(user_id, text):
             messages=data
         )
         response = completion['choices'][0]['message']['content']
+        context = await get_context(user_id)
         context = {
             'messages':[{"role": 'user', "content": response}],
-            'mode': mode
+            'mode': mode,
+            'voice': context['voice']
         }
         await create_new_context(user_id, context)
         data.append({"role": "system", "content": prompt})

@@ -26,12 +26,6 @@ storage = MemoryStorage()
 dp = aiogram.Dispatcher(bot, storage=storage)
 
 
-#############TEST###########
-
-@dp.message_handler(commands=['test'])
-async def test(message: Message):
-    await text_to_speech_send(message.from_user.id, 'This is test audio message!')
-
 #####BASIC HANDLERS###############
 
 @dp.message_handler(commands=['start'])
@@ -56,7 +50,7 @@ async def reset(message: Message):
 
 @dp.message_handler(commands=['help'])
 async def help(message: Message):
-    await message.answer("help")
+    await message.answer(HELP_MESSAGE)
 
 @dp.message_handler(commands=['menu'])
 async def menu(message: Message):

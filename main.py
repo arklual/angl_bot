@@ -17,6 +17,7 @@ import traceback
 import speech_recognition as sr 
 from pydub import AudioSegment
 import tiktoken
+from kb import *
 import tempfile
 from urllib.request import urlopen
 
@@ -35,8 +36,16 @@ async def start(message: Message):
         'mode': 'grammar',
         'voice': 1,
     }
+    lang = get_user_language(message.from_user.id)
+
+    # Отправляем приветственное сообщение на текущем языке
+    if lang == "en":
+        await message.answer(START_MESSAGES_EN[random.randint(0, len(START_MESSAGES_EN)-1)])
+    elif lang == "ru":
+        await message.answer(START_MESSAGES_RU[random.randint(0, len(START_MESSAGES_RU)-1)])
+    else:
+        await message.answer(START_MESSAGES_EN[random.randint(0, len(START_MESSAGES_EN)-1)])
     await create_new_context(message.from_user.id, context)
-    await message.answer(START_MESSAGES_RU[random.randint(0, len(START_MESSAGES_RU)-1)])
 
 @dp.message_handler(commands=['stop'])
 async def stop(message: Message):
@@ -46,15 +55,71 @@ async def stop(message: Message):
 async def reset(message: Message):
     context = await get_context(message.from_user.id) 
     await create_new_context(message.from_user.id, {'messages': [], 'mode': 'grammar', 'voice': context['voice'],})
-    await message.answer("You have started a new session")
+    lang = get_user_language(message.from_user.id)
+
+    # Отправляем приветственное сообщение на текущем языке
+    if lang == "en":
+        await message.answer("You have started a new session")
+    elif lang == "ru":
+        await message.answer("Вы начали новую сессию")
+    else:
+        await message.answer("Hello! I'm your bot.")
 
 @dp.message_handler(commands=['help'])
 async def help(message: Message):
-    await message.answer(HELP_MESSAGE)
+    lang = get_user_language(message.from_user.id)
+    if lang == "en":
+        await message.answer(HELP_MESSAGE_EN)
+    elif lang == "ru":
+        await message.answer(HELP_MESSAGE_RU)
+    else:
+        await message.answer(HELP_MESSAGE_EN)
 
+#____________CHANGE__LANGUAGE_______________
 @dp.message_handler(commands=['menu'])
 async def menu(message: Message):
-    pass
+    lang = get_user_language(message.from_user.id)
+    if lang == "en":
+        await message.answer("Choose your language", reply_markup=langMenu)
+    elif lang == "ru":
+        await message.answer("Выбери язык", reply_markup=langMenu)
+    else:
+        await message.answer("Choose your language", reply_markup=langMenu)
+
+@dp.callback_query_handler(lambda callback_query: callback_query.data == 'ru_lang')
+async def ru_lang(callback_query: CallbackQuery):
+    set_user_language(callback_query.from_user.id, 'ru')
+    await callback_query.answer("Ваш язык теперь русский")
+
+@dp.callback_query_handler(lambda callback_query: callback_query.data == 'ru_lang')
+async def en_lang(callback_query: CallbackQuery):
+    set_user_language(callback_query.from_user.id, 'en')
+    await callback_query.answer("Your lang have been changed to English")
+
+def load_user_languages():
+    try:
+        with open("user_languages.json", "r") as f:
+            user_languages = json.load(f)
+    except FileNotFoundError:
+        user_languages = {}
+    return user_languages
+
+# Сохраняем настройки в файл user_languages.json
+def save_user_languages(user_languages):
+    with open("user_languages.json", "w") as f:
+        json.dump(user_languages, f)
+
+# Получение текущего языка для пользователя
+def get_user_language(chat_id):
+    user_languages = load_user_languages()
+    return user_languages.get(str(chat_id), "en")  # Возвращаем "en" если язык не задан
+
+# Изменение языка для пользователя
+def set_user_language(chat_id, new_lang):
+    user_languages = load_user_languages()
+    user_languages[str(chat_id)] = new_lang
+    save_user_languages(user_languages)
+#___________________________________________
 
 class VoiceForm(StatesGroup):
     voice = State()
@@ -65,7 +130,14 @@ async def voice(message: Message):
     kb = ReplyKeyboardMarkup([
         [v['name']['EN']] for v in voices
     ], resize_keyboard=True)
-    await message.answer("Выберите голос", reply_markup=kb)
+    lang = get_user_language(message.from_user.id)
+    if lang == "en":
+        await message.answer("Choose voice", reply_markup=kb)
+    elif lang == "ru":
+        await message.answer("Выберите голос", reply_markup=kb)
+    else:
+        await message.answer("Choose voice", reply_markup=kb)
+
     await VoiceForm.voice.set()
 
 @dp.message_handler(state=VoiceForm.voice)
@@ -76,7 +148,13 @@ async def process_new_voice(message: Message, state: FSMContext):
     for v in voices:
         if str(v['name']['EN']) == str(voice):
             await change_voice(message.from_user.id, int(v['voice_id']))
-            await message.answer(f'Голос успешно сменен на {voice}!')
+            lang = get_user_language(message.from_user.id)
+            if lang == "en":
+                await message.answer(f"Voice have been changed {voice}")
+            elif lang == "ru":
+                await message.answer(f"Голос успешно сменен на {voice}")
+            else:
+                await message.answer(f"Voice have been changed {voice}")
             return
 
 

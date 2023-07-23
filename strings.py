@@ -23,23 +23,23 @@ START_MESSAGES_EN = [
 ]
 
 HELP_MESSAGE_RU = '''
-    Вот команды, которые доступны в боте:
-    /start - описание бота
-    /menu - смена языка
-    /reset - сброс контекста
-    /voice - переход в режим голосовых сообщений
-    /talk - переход в свободное общение
-    /grammar - переход в режим провекрки грамматики
-    /pronunciation - переход в режим проверки произношения
+Вот команды, которые доступны в боте:
+/start - описание бота
+/grammar - переход в режим проверки грамматики
+/menu - смена языка
+/pronunciation - переход в режим проверки произношения
+/reset - сброс контекста
+/talk - переход в свободное общение
+/voice - переход в режим голосовых сообщений
 '''
 
 HELP_MESSAGE_EN = '''
-    Here are the commands available in the bot:
-    /start - description of the bot
-    /menu - change language
-    /reset - delete context 
-    /voice - switch to voice message mode
-    /talk - switch to free conversation mode
-    /grammar - switch to grammar check mode
-    /pronunciation - switch to pronunciation check mode
+Here are the commands available in the bot:
+/start - description of the bot
+/grammar - switch to grammar check mode
+/menu - change language
+/pronunciation - switch to pronunciation check mode
+/reset - delete context 
+/talk - switch to free conversation mode
+/voice - switch to voice message mode
 '''

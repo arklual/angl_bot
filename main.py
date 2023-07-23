@@ -91,7 +91,7 @@ async def ru_lang(callback_query: CallbackQuery):
     set_user_language(callback_query.from_user.id, 'ru')
     await callback_query.answer("Ваш язык теперь русский")
 
-@dp.callback_query_handler(lambda callback_query: callback_query.data == 'ru_lang')
+@dp.callback_query_handler(lambda callback_query: callback_query.data == 'en_lang')
 async def en_lang(callback_query: CallbackQuery):
     set_user_language(callback_query.from_user.id, 'en')
     await callback_query.answer("Your lang have been changed to English")

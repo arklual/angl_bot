@@ -25,7 +25,7 @@ START_MESSAGES_EN = [
 HELP_MESSAGE_RU = '''
     Вот команды, которые доступны в боте:
     /start - описание бота
-    /change_lang - смена языка
+    /menu - смена языка
     /voice - переход в режим голосовых сообщений
     /talk - переход в свободное общение
     /grammar - переход в режим провекрки грамматики
@@ -35,7 +35,7 @@ HELP_MESSAGE_RU = '''
 HELP_MESSAGE_EN = '''
     Here are the commands available in the bot:
     /start - description of the bot
-    /change_lang - change language
+    /menu - change language
     /voice - switch to voice message mode
     /talk - switch to free conversation mode
     /grammar - switch to grammar check mode

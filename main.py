@@ -99,7 +99,6 @@ async def en_lang(callback_query: CallbackQuery):
 
 
 # GPT PARAMS
-
 @dp.message_handler(commands=['change_max_tokens'])
 async def change_gpt_tokens(message: Message, state: FSMContext):
     if str(message.from_user.id) in ADMINS_ID:
@@ -124,8 +123,34 @@ async def change_gpt_tokens_on(message: Message, state: FSMContext):
     else:
         await state.reset_state()
         await message.answer("Changed")
-        
     set_gpt_params(max_tokens=int(message.text))
+
+
+@dp.message_handler(commands=['change_temp'])
+async def change_gpt_temp(message: Message, state: FSMContext):
+    if str(message.from_user.id) in ADMINS_ID:
+        lang = get_user_language(message.from_user.id)
+        if lang == 'ru':
+            await message.answer('Введите число температуры для GPT')
+            await state.set_state(ChangeGPT_Params.ChangeTemp)
+        elif lang=='en':
+            await message.answer('Please enter temperature you want to apply to GPT')
+            await state.set_state(ChangeGPT_Params.ChangeTemp)
+    else:
+        if lang == 'ru':
+            await message.answer("Вы не админ")
+        else:
+            await message.answer("You are not admin")
+@dp.message_handler(state=ChangeGPT_Params.ChangeTemp)
+async def change_gpt_temp_on(message: Message, state: FSMContext):
+    lang = get_user_language(message.from_user.id)
+    if lang =='ru':
+        await state.reset_state()
+        await message.answer("Поменял")
+    else:
+        await state.reset_state()
+        await message.answer("Changed")
+    set_gpt_params(temp=int(message.text))
 
 
 

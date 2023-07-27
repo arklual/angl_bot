@@ -10,6 +10,7 @@ import aiofiles
 import aiohttp
 import os
 import sys
+from fsm import *
 import json
 import random
 import openai
@@ -75,16 +76,16 @@ async def help(message: Message):
     else:
         await message.answer(HELP_MESSAGE_EN)
 
-#____________CHANGE__LANGUAGE_______________
+#____________CHANGE__LANGUAGE___&___MENU_____________
 @dp.message_handler(commands=['menu'])
 async def menu(message: Message):
     lang = get_user_language(message.from_user.id)
     if lang == "en":
-        await message.answer("Choose your language", reply_markup=langMenu)
+        await message.answer("Main Menu\n Here you change modes and language", reply_markup=menu_keyboard('en'))
     elif lang == "ru":
-        await message.answer("Выбери язык", reply_markup=langMenu)
+        await message.answer("Выбери язык", reply_markup=menu_keyboard('ru'))
     else:
-        await message.answer("Choose your language", reply_markup=langMenu)
+        await message.answer("Choose your language", reply_markup=menu_keyboard('en'))
 
 @dp.callback_query_handler(lambda callback_query: callback_query.data == 'ru_lang')
 async def ru_lang(callback_query: CallbackQuery):
@@ -96,6 +97,68 @@ async def en_lang(callback_query: CallbackQuery):
     set_user_language(callback_query.from_user.id, 'en')
     await callback_query.answer("Your lang have been changed to English")
 
+
+# GPT PARAMS
+
+@dp.message_handler(commands=['change_max_tokens'])
+async def change_gpt_tokens(message: Message, state: FSMContext):
+    if str(message.from_user.id) in ADMINS_ID:
+        lang = get_user_language(message.from_user.id)
+        if lang == 'ru':
+            await message.answer('Введите число токенов для GPT')
+            await state.set_state(ChangeGPT_Params.ChangeTokens)
+        elif lang=='en':
+            await message.answer('Please enter number of tokens you want to apply to GPT')
+            await state.set_state(ChangeGPT_Params.ChangeTokens)
+    else:
+        if lang == 'ru':
+            await message.answer("Вы не админ")
+        else:
+            await message.answer("You are not admin")
+@dp.message_handler(state=ChangeGPT_Params.ChangeTokens)
+async def change_gpt_tokens_on(message: Message, state: FSMContext):
+    lang = get_user_language(message.from_user.id)
+    if lang =='ru':
+        await state.reset_state()
+        await message.answer("Поменял")
+    else:
+        await state.reset_state()
+        await message.answer("Changed")
+        
+    set_gpt_params(max_tokens=int(message.text))
+
+
+
+def load_gpt_params():
+    try:
+        with open("gpt_params.json", "r") as f:
+            gpt_params = json.load(f)
+    except FileNotFoundError:
+        gpt_params = {"temp": 0, "max_tokens": 60}
+    return gpt_params
+
+def save_gpt_params(gpt_params):
+    with open("gpt_params.json", "w") as f:
+        json.dump(gpt_params, f)
+
+def get_gpt_params_temp():
+    gpt_params = load_gpt_params()
+    return gpt_params.get('temp') 
+
+def get_gpt_params_tokens():
+    gpt_params = load_gpt_params()
+    return gpt_params.get('max_tokens') 
+
+# Изменение языка для пользователя
+def set_gpt_params(temp=None, max_tokens=None):
+    gpt_params = load_gpt_params()
+    if temp is None:
+        gpt_params['max_tokens']  = max_tokens
+    else:
+        gpt_params['temp'] = temp
+    save_gpt_params(gpt_params)
+
+# LANGUAGE THINGS
 def load_user_languages():
     try:
         with open("user_languages.json", "r") as f:
@@ -161,16 +224,25 @@ async def process_new_voice(message: Message, state: FSMContext):
 @dp.message_handler(commands=['grammar'])
 async def grammar(message: Message):
     await change_mode(message.from_user.id, 'grammar')
+@dp.callback_query_handler(lambda callback:  callback.data == "grammar_mode")
+async def pronunciation(callback: CallbackQuery):
+    await change_mode(callback.from_user.id, 'grammar')
 
 
 @dp.message_handler(commands=['pronunciation'])
 async def pronunciation(message: Message):
     await change_mode(message.from_user.id, 'pronoun')
+@dp.callback_query_handler(lambda callback:  callback.data == "pron_mode")
+async def pronunciation(callback: CallbackQuery):
+    await change_mode(callback.from_user.id, 'pronoun')
 
 
 @dp.message_handler(commands=['talk'])
 async def talk(message: Message):
     await change_mode(message.from_user.id, 'free')
+@dp.callback_query_handler(lambda callback:  callback.data == "talk_mode")
+async def talk(callback: CallbackQuery):
+    await change_mode(callback.from_user.id, 'free')
 
 ###################TOOLS###########################################
 async def change_mode(user_id, mode):
@@ -307,10 +379,13 @@ async def request_to_gpt(user_id, text):
             data.append({"role": m['from'], "content": m['message']})
     data.append({"role": "user", "content": text})
     await append_messages(user_id, [{'from': 'user', "message": text}])
+    temp = get_gpt_params_temp()
+    tokens = get_gpt_params_tokens()
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=data,
-        max_tokens = 60 + num_tokens,
+        max_tokens = tokens + num_tokens,
+        temperatur = temp
     )
     response = completion['choices'][0]['message']['content']
     await append_messages(user_id, [{"from": "assistant", "message": response}])

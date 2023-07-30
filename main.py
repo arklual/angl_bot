@@ -429,6 +429,7 @@ async def request_to_gpt(user_id, text):
         )
         response = completion['choices'][0]['message']['content']
         context = await get_context(user_id)
+        num_tokens = len(encoding.encode(response))
         context = {
             'messages':[{"role": 'user', "content": response}],
             'mode': mode,
@@ -436,8 +437,10 @@ async def request_to_gpt(user_id, text):
         }
         await create_new_context(user_id, context)
         data.append({"role": "system", "content": prompt})
+        num_tokens += len(encoding.encode(prompt))
         for m in context['messages']:
             data.append({"role": m['from'], "content": m['message']})
+            num_tokens += len(encoding.encode(m['message']))
     data.append({"role": "user", "content": text})
     await append_messages(user_id, [{'from': 'user', "message": text}])
     temp = get_gpt_params_temp()

@@ -29,6 +29,7 @@ HELP_MESSAGE_RU = '''
 /pronunciation - переход в режим проверки произношения
 /reset - сброс контекста
 /start - описание бота
+/subscribe - купить подписку
 /talk - переход в свободное общение
 /voice - переход в режим голосовых сообщений
 '''
@@ -40,6 +41,7 @@ Here are the commands available in the bot:
 /pronunciation - switch to pronunciation check mode
 /reset - delete context 
 /start - description of the bot
+/subscribe - pay a subscription
 /talk - switch to free conversation mode
 /voice - switch to voice message mode
 '''

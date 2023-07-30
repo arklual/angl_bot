@@ -186,7 +186,7 @@ async def change_gpt_temp_on(message: Message, state: FSMContext):
     else:
         await state.reset_state()
         await message.answer("Changed")
-    set_gpt_params(temp=int(message.text))
+    set_gpt_params(temp=float(message.text))
 
 
 

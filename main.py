@@ -449,7 +449,7 @@ async def request_to_gpt(user_id, text):
         model="gpt-3.5-turbo",
         messages=data,
         max_tokens = tokens + num_tokens,
-        temperatur = temp
+        temperature = temp
     )
     response = completion['choices'][0]['message']['content']
     await append_messages(user_id, [{"from": "assistant", "message": response}])
@@ -478,7 +478,7 @@ async def admin(message: Message):
         cur_grammar_prompt = await fp.read()
     async with aiofiles.open('prompt_pronoun.txt', 'r', encoding='utf-8') as fp:
         cur_pronoun_prompt = await fp.read()
-    await message.answer('Текущий промпт свободного диалога: \n' + cur_free_prompt + "\n\n\n" + 'Текущий промпт грамматики: \n' + cur_grammar_prompt + '\n\n\n' + 'Текущий промпт произношения: \n' + cur_pronoun_prompt)
+    await message.answer('Вы можете:\nсменить температуру - /change_temp\nсменить максимально число токенов - /change_max_tokens\n\nТекущий промпт свободного диалога: \n' + cur_free_prompt + "\n\n\n" + 'Текущий промпт грамматики: \n' + cur_grammar_prompt + '\n\n\n' + 'Текущий промпт произношения: \n' + cur_pronoun_prompt)
 
 
     keyboard = InlineKeyboardMarkup()

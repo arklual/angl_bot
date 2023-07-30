@@ -8,6 +8,7 @@ def menu_keyboard(cur_lang):
         main_menu.add(types.InlineKeyboardButton('Перейти в режим "Свободный Диалог"', callback_data='talk_mode'))
         main_menu.add(types.InlineKeyboardButton('Поменять язык на Русский', callback_data='ru_lang'))
         main_menu.add(types.InlineKeyboardButton('Поменять язык на Английский', callback_data='en_lang'))
+        return main_menu
     elif cur_lang == 'en':
         main_menu = types.InlineKeyboardMarkup(row_width=5)
         main_menu.add(types.InlineKeyboardButton('Turn on "Grammar" mode', callback_data='grammar_mode'))
@@ -15,4 +16,5 @@ def menu_keyboard(cur_lang):
         main_menu.add(types.InlineKeyboardButton('Turn on "Free Talk" mode', callback_data='talk_mode'))
         main_menu.add(types.InlineKeyboardButton('Change language to RU', callback_data='ru_lang'))
         main_menu.add(types.InlineKeyboardButton('Change language to EN', callback_data='en_lang'))
+        return main_menu
         

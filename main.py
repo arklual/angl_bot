@@ -62,7 +62,7 @@ async def successful_payment(message: types.Message):
     for k, v in  payment_info.items():
         print(f"{k} = {v}")
     # Добавлять пользователя в бд + считать срок окончания подписки
-    await bot.send_message(message.chat.id, f'Платеж на сумму {message.successful_payment.total_amount // 100} {message.successful_payment.currency} прошел успешно!!!', reply_markup=keyb_for_subed)
+    await bot.send_message(message.chat.id, f'Платеж на сумму {message.successful_payment.total_amount // 100} {message.successful_payment.currency} прошел успешно!!!')
 
 
 #####BASIC HANDLERS###############

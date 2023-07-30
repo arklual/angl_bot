@@ -287,7 +287,7 @@ async def grammar(message: Message):
     await change_mode(message.from_user.id, 'grammar')
 @dp.callback_query_handler(lambda callback:  callback.data == "grammar_mode")
 async def grammar_c(callback: CallbackQuery):
-    callback.answer()
+    await callback.answer()
     await change_mode(callback.from_user.id, 'grammar')
 
 
@@ -296,7 +296,7 @@ async def pronunciation(message: Message):
     await change_mode(message.from_user.id, 'pronoun')
 @dp.callback_query_handler(lambda callback:  callback.data == "pron_mode")
 async def pronunciation_c(callback: CallbackQuery):
-    callback.answer()
+    await callback.answer()
     await change_mode(callback.from_user.id, 'pronoun')
 
 
@@ -305,7 +305,7 @@ async def talk(message: Message):
     await change_mode(message.from_user.id, 'free')
 @dp.callback_query_handler(lambda callback:  callback.data == "talk_mode")
 async def talk_c(callback: CallbackQuery):
-    callback.answer()
+    await callback.answer()
     await change_mode(callback.from_user.id, 'free')
 
 ###################TOOLS###########################################

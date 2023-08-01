@@ -53,7 +53,7 @@ async def subscribe(message: types.Message):
 
 @dp.callback_query_handler(lambda callback:  callback.data == "subscribe")
 async def subscribe_c(callback: CallbackQuery):
-    callback.answer()
+    await callback.answer()
     if PAYMENT_TOKEN_TEST.split(':')[1] == "TEST":
         await bot.send_message(callback.message.chat.id, 'Тестовый платеж')
     await bot.send_invoice(
@@ -301,28 +301,58 @@ async def process_new_voice(message: Message, state: FSMContext):
 
 @dp.message_handler(commands=['grammar'])
 async def grammar(message: Message):
+    lang = get_user_language(message.from_user.id)
+    if lang == "en":
+        await message.answer('Now the mode of dialog is "Grammar"')
+    elif lang == "ru":
+        await message.answer('Включен режим грамматики')
     await change_mode(message.from_user.id, 'grammar')
 @dp.callback_query_handler(lambda callback:  callback.data == "grammar_mode")
 async def grammar_c(callback: CallbackQuery):
     await callback.answer()
+    lang = get_user_language(callback.message.from_user.id)
+    if lang == "en":
+        await callback.message.answer('Now the mode of dialog is "Grammar"')
+    elif lang == "ru":
+        await callable.message.answer('Включен режим грамматики')
     await change_mode(callback.from_user.id, 'grammar')
 
 
 @dp.message_handler(commands=['pronunciation'])
 async def pronunciation(message: Message):
+    lang = get_user_language(message.from_user.id)
+    if lang == "en":
+        await message.answer('Now the mode of dialog is "Pronounciation"')
+    elif lang == "ru":
+        await message.answer('Включен режим произношения')
     await change_mode(message.from_user.id, 'pronoun')
 @dp.callback_query_handler(lambda callback:  callback.data == "pron_mode")
 async def pronunciation_c(callback: CallbackQuery):
     await callback.answer()
+    lang = get_user_language(callback.message.from_user.id)
+    if lang == "en":
+        await callback.message.answer('Now the mode of dialog is "Pronounciation"')
+    elif lang == "ru":
+        await callback.message.answer('Включен режим произношения')
     await change_mode(callback.from_user.id, 'pronoun')
 
 
 @dp.message_handler(commands=['talk'])
 async def talk(message: Message):
+    lang = get_user_language(message.from_user.id)
+    if lang == "en":
+        await message.answer('Now the mode of dialog is "Free Talk"')
+    elif lang == "ru":
+        await message.answer('Включен режим свободного диалога')
     await change_mode(message.from_user.id, 'free')
 @dp.callback_query_handler(lambda callback:  callback.data == "talk_mode")
 async def talk_c(callback: CallbackQuery):
     await callback.answer()
+    lang = get_user_language(callback.message.from_user.id)
+    if lang == "en":
+        await callback.message.answer('Now the mode of dialog is "Free Talk"')
+    elif lang == "ru":
+        await callback.message.answer('Включен режим свободного диалога')
     await change_mode(callback.from_user.id, 'free')
 
 ###################TOOLS###########################################

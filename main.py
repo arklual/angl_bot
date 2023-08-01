@@ -77,16 +77,12 @@ async def start(message: Message):
 
     # Отправляем приветственное сообщение на текущем языке
     if lang == "en":
-        await message.answer(START_MESSAGES_EN[random.randint(0, len(START_MESSAGES_EN)-1)])
+        await message.answer(START_MESSAGES_EN[random.randint(0, len(START_MESSAGES_EN)-1)], reply_markup=menu_keyboard('en'))
     elif lang == "ru":
-        await message.answer(START_MESSAGES_RU[random.randint(0, len(START_MESSAGES_RU)-1)])
+        await message.answer(START_MESSAGES_RU[random.randint(0, len(START_MESSAGES_RU)-1)], reply_markup=menu_keyboard('ru'))
     else:
-        await message.answer(START_MESSAGES_EN[random.randint(0, len(START_MESSAGES_EN)-1)])
+        await message.answer(START_MESSAGES_EN[random.randint(0, len(START_MESSAGES_EN)-1)], reply_markup=menu_keyboard('en'))
     await create_new_context(message.from_user.id, context)
-
-@dp.message_handler(commands=['stop'])
-async def stop(message: Message):
-    pass
 
 @dp.message_handler(commands=['reset'])
 async def reset(message: Message):

@@ -310,7 +310,7 @@ async def grammar(message: Message):
 @dp.callback_query_handler(lambda callback:  callback.data == "grammar_mode")
 async def grammar_c(callback: CallbackQuery):
     await callback.answer()
-    lang = get_user_language(callback.message.from_user.id)
+    lang = get_user_language(callback.from_user.id)
     if lang == "en":
         await callback.message.answer('Now the mode of dialog is "Grammar"')
     elif lang == "ru":
@@ -329,7 +329,7 @@ async def pronunciation(message: Message):
 @dp.callback_query_handler(lambda callback:  callback.data == "pron_mode")
 async def pronunciation_c(callback: CallbackQuery):
     await callback.answer()
-    lang = get_user_language(callback.message.from_user.id)
+    lang = get_user_language(callback.from_user.id)
     if lang == "en":
         await callback.message.answer('Now the mode of dialog is "Pronounciation"')
     elif lang == "ru":
@@ -348,7 +348,7 @@ async def talk(message: Message):
 @dp.callback_query_handler(lambda callback:  callback.data == "talk_mode")
 async def talk_c(callback: CallbackQuery):
     await callback.answer()
-    lang = get_user_language(callback.message.from_user.id)
+    lang = get_user_language(callback.from_user.id)
     if lang == "en":
         await callback.message.answer('Now the mode of dialog is "Free Talk"')
     elif lang == "ru":

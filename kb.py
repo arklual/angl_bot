@@ -6,6 +6,7 @@ def menu_keyboard(cur_lang):
         main_menu.add(types.InlineKeyboardButton('Перейти в режим "Грамматика"', callback_data='grammar_mode'))
         main_menu.add(types.InlineKeyboardButton('Перейти в режим "Произношение"', callback_data='pron_mode'))
         main_menu.add(types.InlineKeyboardButton('Перейти в режим "Свободный Диалог"', callback_data='talk_mode'))
+        main_menu.add(types.InlineKeyboardButton('Купить подписку', callback_data='ru_lang'))
         main_menu.add(types.InlineKeyboardButton('Поменять язык на Русский', callback_data='ru_lang'))
         main_menu.add(types.InlineKeyboardButton('Поменять язык на Английский', callback_data='en_lang'))
         return main_menu
@@ -14,6 +15,7 @@ def menu_keyboard(cur_lang):
         main_menu.add(types.InlineKeyboardButton('Turn on "Grammar" mode', callback_data='grammar_mode'))
         main_menu.add(types.InlineKeyboardButton('Turn on "Pronounciation" mode', callback_data='pron_mode'))
         main_menu.add(types.InlineKeyboardButton('Turn on "Free Talk" mode', callback_data='talk_mode'))
+        main_menu.add(types.InlineKeyboardButton('Subscribe', callback_data='ru_lang'))
         main_menu.add(types.InlineKeyboardButton('Change language to RU', callback_data='ru_lang'))
         main_menu.add(types.InlineKeyboardButton('Change language to EN', callback_data='en_lang'))
         return main_menu

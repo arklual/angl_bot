@@ -31,7 +31,7 @@ dp = aiogram.Dispatcher(bot, storage=storage)
 
 #___________Payment__Handlers___________
 PRICE = types.LabeledPrice(label='Подписка на 1 месяц', amount=500*100) # 500 rub
-@dp.message_handler(lambda message: message.text.lower() == 'купить подписку' or message.text.lower() == '/subscribe')
+@dp.message_handler(lambda message: message.text.lower() == 'купить подписку' or message.text.lower() == 'subscribe' or message.text.lower() == '/subscribe')
 async def subscribe(message: types.Message):
     if PAYMENT_TOKEN_TEST.split(':')[1] == "TEST":
         await bot.send_message(message.chat.id, 'Тестовый платеж')
@@ -115,9 +115,9 @@ async def menu(message: Message):
     if lang == "en":
         await message.answer("Main Menu\n Here you change modes and language", reply_markup=menu_keyboard('en'))
     elif lang == "ru":
-        await message.answer("Выбери язык", reply_markup=menu_keyboard('ru'))
+        await message.answer("Главное меню", reply_markup=menu_keyboard('ru'))
     else:
-        await message.answer("Choose your language", reply_markup=menu_keyboard('en'))
+        await message.answer("Main Menu\n Here you change modes and language", reply_markup=menu_keyboard('en'))
 
 @dp.callback_query_handler(lambda callback_query: callback_query.data == 'ru_lang')
 async def ru_lang(callback_query: CallbackQuery):

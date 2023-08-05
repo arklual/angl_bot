@@ -26,7 +26,7 @@ async def start(message: Message):
 
 async def reset(message: Message):
     context = await utils.get_context(message.from_user.id) 
-    await utils.create_new_context(message.from_user.id, {'messages': [], 'mode': 'grammar', 'voice': context['voice'],})
+    await utils.create_new_context(message.from_user.id, {'messages': [], 'mode': 'grammar', 'is_male_voice': context['is_male_voice'],})
     lang = utils.get_user_language(message.from_user.id)
 
     # Отправляем приветственное сообщение на текущем языке

@@ -13,4 +13,4 @@ async def on_start(_):
     await register_all_handlers(dp)
 
 if __name__ == '__main__':
-    executor.start_polling(dp, on_startup=on_start)
+    executor.start_polling(dp, on_startup=on_start, skip_updates=True)

@@ -216,7 +216,7 @@ async def update_mode(mode, param, value):
             if m['name'] == mode:
                  data[i][param] = value
                  break
-    async with aiofiles.open("modes.json", "w") as fp:
+    async with aiofiles.open("modes.json", "w", encoding='utf-8') as fp:
         await fp.write(json.dumps(data, ensure_ascii=False)) 
 
 

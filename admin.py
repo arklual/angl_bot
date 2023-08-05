@@ -27,8 +27,8 @@ class ChangeTemperatureForm(StatesGroup):
 class ChangeTopP(StatesGroup):
     top_p = State()
     name_before = State()
-class ChangeTresencePenalty(StatesGroup):
-    tresence_penalty = State()
+class ChangePresencePenalty(StatesGroup):
+    presence_penalty = State()
     name_before = State()
 class ChangeFrequencyPenalty(StatesGroup):
     frequency_penalty = State()
@@ -73,7 +73,7 @@ async def mode_info(callback: CallbackQuery):
     kb.add(InlineKeyboardButton('Изменить температуру', callback_data=f'admin_change_temperature_{mode["name"]}'))
     kb.add(InlineKeyboardButton('Изменить max_tokens', callback_data=f'admin_change_max_tokens_{mode["name"]}'))
     kb.add(InlineKeyboardButton('Изменить top_p', callback_data=f'admin_change_top_p_{mode["name"]}'))
-    kb.add(InlineKeyboardButton('Изменить tresence_penalty', callback_data=f'admin_change_tresence_penalty_{mode["name"]}'))
+    kb.add(InlineKeyboardButton('Изменить presence_penalty', callback_data=f'admin_change_presence_penalty_{mode["name"]}'))
     kb.add(InlineKeyboardButton('Изменить frequency_penalty', callback_data=f'admin_change_frequency_penalty_{mode["name"]}'))
     kb.add(InlineKeyboardButton('Изменить ID мужского голоса', callback_data=f'admin_change_voice_male_{mode["name"]}'))
     kb.add(InlineKeyboardButton('Изменить ID женского голоса', callback_data=f'admin_change_voice_female_{mode["name"]}'))
@@ -146,20 +146,20 @@ async def procces_new_top_p(message: Message, state: FSMContext):
     await message.answer('Значение top_p успешно изменено!')
 
 
-async def change_tresence_penalty(callback: CallbackQuery, state: FSMContext):
+async def change_presence_penalty(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
-    await callback.message.answer('Введите новое значение tresence_penalty (десятичные дроби записывать через точку)')
-    await state.set_state(ChangeTresencePenalty.name_before)
-    await state.update_data(name_before=callback.data.split('dmin_change_tresence_penalty_')[-1])
-    await state.set_state(ChangeTresencePenalty.tresence_penalty)
+    await callback.message.answer('Введите новое значение presence_penalty (десятичные дроби записывать через точку)')
+    await state.set_state(ChangePresencePenalty.name_before)
+    await state.update_data(name_before=callback.data.split('dmin_change_presence_penalty_')[-1])
+    await state.set_state(ChangePresencePenalty.presence_penalty)
 
 
-async def procces_new_tresence_penalty(message: Message, state: FSMContext):
-    await state.update_data(tresence_penalty=float(message.text))
+async def procces_new_presence_penalty(message: Message, state: FSMContext):
+    await state.update_data(presence_penalty=float(message.text))
     data = await state.get_data()
     await state.finish()
-    await utils.update_mode(data['name_before'],'tresence_penalty', data['tresence_penalty'])
-    await message.answer('Значение tresence_penalty успешно изменено!')
+    await utils.update_mode(data['name_before'],'presence_penalty', data['presence_penalty'])
+    await message.answer('Значение presence_penalty успешно изменено!')
 
 async def change_frequency_penalty(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
@@ -257,7 +257,7 @@ async def register_handlers(dp: Dispatcher):
     dp.register_message_handler(procces_new_temperature, state=ChangeTemperatureForm.temperature)
     dp.register_message_handler(procces_new_max_tokens, state=ChangeMaxTokensForm.max_tokens)
     dp.register_message_handler(procces_new_top_p, state=ChangeTopP.top_p)
-    dp.register_message_handler(procces_new_tresence_penalty, state=ChangeTresencePenalty.tresence_penalty)
+    dp.register_message_handler(procces_new_presence_penalty, state=ChangePresencePenalty.presence_penalty)
     dp.register_message_handler(procces_new_frequency_penalt, state=ChangeFrequencyPenalty.frequency_penalty)
     dp.register_message_handler(procces_new_voice_male, state=ChangeVoiceMale.voice_id)
     dp.register_message_handler(procces_new_voice_female, state=ChangeVoiceFemale.voice_id)
@@ -273,7 +273,7 @@ async def register_callbacks(dp: Dispatcher):
     dp.register_callback_query_handler(change_temperature, lambda c: c.data.startswith('admin_change_temperature_'))
     dp.register_callback_query_handler(change_max_tokens, lambda c: c.data.startswith('admin_change_max_tokens_'))
     dp.register_callback_query_handler(change_top_p, lambda c: c.data.startswith('admin_change_top_p_'))
-    dp.register_callback_query_handler(change_tresence_penalty, lambda c: c.data.startswith('admin_change_tresence_penalty_'))
+    dp.register_callback_query_handler(change_presence_penalty, lambda c: c.data.startswith('admin_change_presence_penalty_'))
     dp.register_callback_query_handler(change_frequency_penalty, lambda c: c.data.startswith('admin_change_frequency_penalty_'))
     dp.register_callback_query_handler(change_voice_male, lambda c: c.data.startswith('admin_change_voice_male_'))
     dp.register_callback_query_handler(change_voice_female, lambda c: c.data.startswith('admin_change_voice_female_'))

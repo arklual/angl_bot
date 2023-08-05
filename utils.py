@@ -205,7 +205,7 @@ async def delete_mode(mode):
             if m['name'] == mode:
                  data.remove(m)
                  break
-    async with aiofiles.open("modes.json", "w") as fp:
+    async with aiofiles.open("modes.json", "w", encoding='utf-8') as fp:
         await fp.write(json.dumps(data, ensure_ascii=False))   
 
 async def update_mode(mode, param, value):
@@ -237,7 +237,7 @@ async def add_mode(verbose_name_ru: str, verbose_name_en: str, name: str, voice_
         "voice_id_female": voice_id_female,
         "voice_id_male": voice_id_male,
     })
-    async with aiofiles.open("modes.json", "w") as fp:
+    async with aiofiles.open("modes.json", "w", encoding='utf-8') as fp:
         await fp.write(json.dumps(data, ensure_ascii=False))
 
 # LANGUAGE THINGS

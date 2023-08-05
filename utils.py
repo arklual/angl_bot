@@ -27,7 +27,7 @@ async def change_voice_gender(user_id, is_male):
     data = {}
     async with aiofiles.open(f'data/{user_id}.json', 'r', encoding='utf-8') as file:
         data = json.loads(await file.read())
-    data['is_male_voice'] = 'm'
+    data['is_male_voice'] = is_male
     await create_new_context(user_id, data)
 
 
@@ -46,9 +46,9 @@ async def text_to_speech_send(bot, chat_id, text):
                "Authorization": CYBERVOICE_TOKEN}
     context = await get_context(chat_id)
     if context['is_male_voice']:
-        voice_id = await get_mode(context['mode'])['voice_id_male']
+        voice_id = (await get_mode(context['mode']))['voice_id_male']
     else:
-        voice_id = await get_mode(context['mode'])['voice_id_female']
+        voice_id = (await get_mode(context['mode']))['voice_id_female']
     body = {'voice_id': voice_id,
             'text': text,
             'format': 'mp3'}
@@ -197,6 +197,29 @@ async def get_mode(mode):
             if i['name'] == mode:
                 return i
 
+async def delete_mode(mode):
+    data = []
+    async with aiofiles.open('modes.json', 'r', encoding='utf-8') as fp:
+        data = json.loads(await fp.read())
+        for m in data:
+            if m['name'] == mode:
+                 data.remove(m)
+                 break
+    async with aiofiles.open("modes.json", "w") as fp:
+        await fp.write(json.dumps(data, ensure_ascii=False))   
+
+async def update_mode(mode, param, value):
+    data = []
+    async with aiofiles.open('modes.json', 'r', encoding='utf-8') as fp:
+        data = json.loads(await fp.read())
+        for i, m in enumerate(data):
+            if m['name'] == mode:
+                 data[i][param] = value
+                 break
+    async with aiofiles.open("modes.json", "w") as fp:
+        await fp.write(json.dumps(data, ensure_ascii=False)) 
+
+
 async def add_mode(verbose_name_ru: str, verbose_name_en: str, name: str, voice_id_female: int, voice_id_male: int, prompt: str, temperature: float, max_tokens: int, top_p: float, presence_penalty: float, frequency_penalty:float):
     data = []
     async with aiofiles.open('modes.json', 'r', encoding='utf-8') as fp:
@@ -214,7 +237,7 @@ async def add_mode(verbose_name_ru: str, verbose_name_en: str, name: str, voice_
         "voice_id_female": voice_id_female,
         "voice_id_male": voice_id_male,
     })
-    with aiofiles.open("modes.json", "w") as fp:
+    async with aiofiles.open("modes.json", "w") as fp:
         await fp.write(json.dumps(data, ensure_ascii=False))
 
 # LANGUAGE THINGS

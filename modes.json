@@ -1,1 +1,1 @@
-[]
+[{"name": "grammar", "verbose_name_ru": "Грамматика", "verbose_name_en": "Grammar", "prompt": "hi", "temperature": 0.1, "max_tokens": 10, "top_p": 1.0, "presence_penalty": 1.0, "frequency_penalty": 1.0, "voice_id_female": 1, "voice_id_male": 2}]

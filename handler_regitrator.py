@@ -5,10 +5,10 @@ import admin
 import dialog_handler
 
 async def register_all_handlers(dp: Dispatcher):
-    await basic_handlers.register_handlers(dp)
-    await basic_handlers.register_callbacks(dp)
     await payments.register_handlers(dp)
     await payments.register_callbacks(dp)
     await admin.register_handlers(dp)
     await admin.register_callbacks(dp)
+    await basic_handlers.register_handlers(dp)
+    await basic_handlers.register_callbacks(dp)
     await dialog_handler.register_handlers(dp)

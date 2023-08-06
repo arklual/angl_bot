@@ -90,7 +90,8 @@ async def mode_info(callback: CallbackQuery):
 
 async def change_prompt(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
-    await callback.message.answer('Введите новый промпт')
+    mode_before = await utils.get_mode(callback.data.split('dmin_change_prompt_')[-1])
+    await callback.message.answer(f'<b>Текущий промпт:</b> {mode_before["prompt"]}\n\nВведите новый промпт')
     await state.set_state(ChangePromptForm.name_before)
     await state.update_data(name_before=callback.data.split('dmin_change_prompt_')[-1])
     await state.set_state(ChangePromptForm.prompt)
@@ -104,7 +105,8 @@ async def procces_new_prompt(message: Message, state: FSMContext):
 
 async def change_temperature(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
-    await callback.message.answer('Введите новую температуру (десятичные дроби записывать через точку)')
+    mode_before = await utils.get_mode(callback.data.split('dmin_change_temperature_')[-1])
+    await callback.message.answer(f'<b>Текущая температура:</b> {mode_before["temperature"]}\nВведите новую температуру (десятичные дроби записывать через точку)')
     await state.set_state(ChangeTemperatureForm.name_before)
     await state.update_data(name_before=callback.data.split('dmin_change_temperature_')[-1])
     await state.set_state(ChangeTemperatureForm.temperature)
@@ -119,7 +121,8 @@ async def procces_new_temperature(message: Message, state: FSMContext):
 
 async def change_max_tokens(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
-    await callback.message.answer('Введите новое значение max_tokens')
+    mode_before = await utils.get_mode(callback.data.split('dmin_change_max_tokens_')[-1])
+    await callback.message.answer(f'<b>max_tokens:</b> {mode_before["max_tokens"]}\nВведите новое значение max_tokens')
     await state.set_state(ChangeMaxTokensForm.name_before)
     await state.update_data(name_before=callback.data.split('dmin_change_max_tokens_')[-1])
     await state.set_state(ChangeMaxTokensForm.max_tokens)
@@ -133,7 +136,8 @@ async def procces_new_max_tokens(message: Message, state: FSMContext):
 
 async def change_top_p(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
-    await callback.message.answer('Введите новое значение top_p (десятичные дроби записывать через точку)')
+    mode_before = await utils.get_mode(callback.data.split('dmin_change_top_p_')[-1])
+    await callback.message.answer(f'<b>top_p:</b> {mode_before["top_p"]}\nВведите новое значение top_p (десятичные дроби записывать через точку)')
     await state.set_state(ChangeTopP.name_before)
     await state.update_data(name_before=callback.data.split('dmin_change_top_p_')[-1])
     await state.set_state(ChangeTopP.top_p)
@@ -148,7 +152,8 @@ async def procces_new_top_p(message: Message, state: FSMContext):
 
 async def change_presence_penalty(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
-    await callback.message.answer('Введите новое значение presence_penalty (десятичные дроби записывать через точку)')
+    mode_before = await utils.get_mode(callback.data.split('dmin_change_presence_penalty_')[-1])
+    await callback.message.answer(f'<b>presence_penalty:</b> {mode_before["presence_penalty"]}\nВведите новое значение presence_penalty (десятичные дроби записывать через точку)')
     await state.set_state(ChangePresencePenalty.name_before)
     await state.update_data(name_before=callback.data.split('dmin_change_presence_penalty_')[-1])
     await state.set_state(ChangePresencePenalty.presence_penalty)
@@ -163,7 +168,8 @@ async def procces_new_presence_penalty(message: Message, state: FSMContext):
 
 async def change_frequency_penalty(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
-    await callback.message.answer('Введите новое значение frequency_penalty (десятичные дроби записывать через точку)')
+    mode_before = await utils.get_mode(callback.data.split('dmin_change_frequency_penalty_')[-1])
+    await callback.message.answer(f'<b>frequency_penalty:</b> {mode_before["frequency_penalty"]}\nВведите новое значение frequency_penalty (десятичные дроби записывать через точку)')
     await state.set_state(ChangeFrequencyPenalty.name_before)
     await state.update_data(name_before=callback.data.split('dmin_change_frequency_penalty_')[-1])
     await state.set_state(ChangeFrequencyPenalty.frequency_penalty)
@@ -177,7 +183,8 @@ async def procces_new_frequency_penalt(message: Message, state: FSMContext):
 
 async def change_voice_male(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
-    await callback.message.answer('Введите ID нового мужского голоса')
+    mode_before = await utils.get_mode(callback.data.split('dmin_change_voice_male_')[-1])
+    await callback.message.answer(f'<b>ID мужского голоса:</b> {mode_before["voice_id_male"]}\nВведите ID нового мужского голоса')
     await state.set_state(ChangeVoiceMale.name_before)
     await state.update_data(name_before=callback.data.split('dmin_change_voice_male_')[-1])
     await state.set_state(ChangeVoiceMale.voice_id)
@@ -191,7 +198,8 @@ async def procces_new_voice_male(message: Message, state: FSMContext):
 
 async def change_voice_female(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
-    await callback.message.answer('Введите ID нового женского голоса')
+    mode_before = await utils.get_mode(callback.data.split('dmin_change_voice_female_')[-1])
+    await callback.message.answer(f'<b>ID женского голоса:</b> {mode_before["voice_id_female"]}\nВведите ID нового женского голоса')
     await state.set_state(ChangeVoiceFemale.name_before)
     await state.update_data(name_before=callback.data.split('dmin_change_voice_female_')[-1])
     await state.set_state(ChangeVoiceFemale.voice_id)
@@ -205,7 +213,8 @@ async def procces_new_voice_female(message: Message, state: FSMContext):
 
 async def change_name(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
-    await callback.message.answer('Введите новую команду для запуска (в названии не должно быть пробелов, в начале / писать не надо)')
+    mode_before = await utils.get_mode(callback.data.split('dmin_change_name_')[-1])
+    await callback.message.answer(f'<b>Команда:</b> {mode_before["name"]}\nВведите новую команду для запуска (в названии не должно быть пробелов, в начале / писать не надо)')
     await state.set_state(ChangeNameForm.name_before)
     await state.update_data(name_before=callback.data.split('dmin_change_name_')[-1])
     await state.set_state(ChangeNameForm.name)
@@ -219,7 +228,8 @@ async def procces_new_name(message: Message, state: FSMContext):
 
 async def change_verbose_name_ru(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
-    await callback.message.answer('Введите новое название на русском')
+    mode_before = await utils.get_mode(callback.data.split('dmin_change_verbose_name_ru_')[-1])
+    await callback.message.answer(f'<b>Название на русском:</b> {mode_before["verbose_name_ru"]}\nВведите новое название на русском')
     await state.set_state(ChangeVerboseNameRuForm.name_before)
     await state.update_data(name_before=callback.data.split('dmin_change_verbose_name_ru_')[-1])
     await state.set_state(ChangeVerboseNameRuForm.verbose_name_ru)
@@ -233,7 +243,8 @@ async def procces_new_verbose_name_ru(message: Message, state: FSMContext):
 
 async def change_verbose_name_en(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
-    await callback.message.answer('Введите новое название на английском')
+    mode_before = await utils.get_mode(callback.data.split('dmin_change_verbose_name_en_')[-1])
+    await callback.message.answer(f'<b>Название на английском:</b> {mode_before["verbose_name_en"]}\nВведите новое название на английском')
     await state.set_state(ChangeVerboseNameEnForm.name_before)
     await state.update_data(name_before=callback.data.split('dmin_change_verbose_name_en_')[-1])
     await state.set_state(ChangeVerboseNameEnForm.verbose_name_en)

@@ -174,12 +174,12 @@ async def change_frequency_penalty(callback: CallbackQuery, state: FSMContext):
     await state.update_data(name_before=callback.data.split('dmin_change_frequency_penalty_')[-1])
     await state.set_state(ChangeFrequencyPenalty.frequency_penalty)
 
-async def procces_new_frequency_penalt(message: Message, state: FSMContext):
+async def procces_new_frequency_penalty(message: Message, state: FSMContext):
     await state.update_data(frequency_penalt=float(message.text))
     data = await state.get_data()
     await state.finish()
-    await utils.update_mode(data['name_before'],'frequency_penalt', data['frequency_penalt'])
-    await message.answer('Значение frequency_penalt успешно изменено!')
+    await utils.update_mode(data['name_before'],'frequency_penalty', data['frequency_penalty'])
+    await message.answer('Значение frequency_penalty успешно изменено!')
 
 async def change_voice_male(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
@@ -269,7 +269,7 @@ async def register_handlers(dp: Dispatcher):
     dp.register_message_handler(procces_new_max_tokens, state=ChangeMaxTokensForm.max_tokens)
     dp.register_message_handler(procces_new_top_p, state=ChangeTopP.top_p)
     dp.register_message_handler(procces_new_presence_penalty, state=ChangePresencePenalty.presence_penalty)
-    dp.register_message_handler(procces_new_frequency_penalt, state=ChangeFrequencyPenalty.frequency_penalty)
+    dp.register_message_handler(procces_new_frequency_penalty, state=ChangeFrequencyPenalty.frequency_penalty)
     dp.register_message_handler(procces_new_voice_male, state=ChangeVoiceMale.voice_id)
     dp.register_message_handler(procces_new_voice_female, state=ChangeVoiceFemale.voice_id)
     dp.register_message_handler(procces_new_name, state=ChangeNameForm.name)

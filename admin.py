@@ -175,7 +175,7 @@ async def change_frequency_penalty(callback: CallbackQuery, state: FSMContext):
     await state.set_state(ChangeFrequencyPenalty.frequency_penalty)
 
 async def procces_new_frequency_penalty(message: Message, state: FSMContext):
-    await state.update_data(frequency_penalt=float(message.text))
+    await state.update_data(frequency_penalty=float(message.text))
     data = await state.get_data()
     await state.finish()
     await utils.update_mode(data['name_before'],'frequency_penalty', data['frequency_penalty'])

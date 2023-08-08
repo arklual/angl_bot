@@ -45,16 +45,26 @@ async def handle_all_messages(message: Message):
     if message.reply_to_message and message.reply_to_message.text:
         if '/' in message.text:
             mode = message.text.replace('/', '')
-            cur_mode = (await get_context(message.from_user.id))['mode']
+            context = await get_context(message.from_user.id)
+            await create_new_context(message.from_user.id, {
+                'messages': [],
+                'mode': mode,
+                'is_male_voice': context['is_male_voice']
+            })
             await change_mode(message.from_user.id, mode)
             response = await request_to_gpt(message.from_user.id, message.reply_to_message.text)
             await message.answer(response)
-            await change_mode(message.from_user.id, cur_mode)
+            await create_new_context(message.from_user.id, context)
             return
     elif message.reply_to_message and message.reply_to_message.voice:
         if '/' in message.text:
             mode = message.text.replace('/', '')
-            cur_mode = (await get_context(message.from_user.id))['mode']
+            context = await get_context(message.from_user.id)
+            await create_new_context(message.from_user.id, {
+                'messages': [],
+                'mode': mode,
+                'is_male_voice': context['is_male_voice']
+            })
             await change_mode(message.from_user.id, mode)
             file_id = message.reply_to_message.voice.file_id
             file_info = await message.bot.get_file(file_id)
@@ -76,7 +86,7 @@ async def handle_all_messages(message: Message):
                 except Exception as e:
                     await message.answer("I didn't get it")
             response = await request_to_gpt(message.from_user.id, text)
-            await change_mode(message.from_user.id, cur_mode)
+            await create_new_context(message.from_user.id, context)
             await text_to_speech_send(message.bot, message.chat.id, response)
             return
     lang = list(langid.classify(message.text))[0]

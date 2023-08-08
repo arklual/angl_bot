@@ -145,7 +145,7 @@ async def register_handlers(dp: Dispatcher):
     dp.register_message_handler(help, commands=['help'])
     dp.register_message_handler(menu, commands=['menu'])
     dp.register_message_handler(voice, commands=['voice'])
-    dp.register_message_handler(change_mode, lambda m: m.text.startswith('/'))
+    dp.register_message_handler(change_mode, lambda m: m.text.startswith('/') and not m.reply_to_message)
     
 
 async def register_callbacks(dp: Dispatcher):

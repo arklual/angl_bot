@@ -56,7 +56,7 @@ async def handle_all_messages(message: Message):
             mode = message.text.replace('/', '')
             cur_mode = (await get_context(message.from_user.id))['mode']
             await change_mode(message.from_user.id, mode)
-            file_id = message.voice.file_id
+            file_id = message.reply_to_message.voice.file_id
             file_info = await message.bot.get_file(file_id)
             file_path = file_info.file_path 
             await message.bot.download_file(file_path, f"voices/voice{message.from_user.id}.oga")

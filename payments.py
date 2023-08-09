@@ -89,7 +89,7 @@ async def check_subscription(user_id):
     for s in subscribers:
         if s['user_id'] == user_id:
             user_is_subscriber = True
-            return (datetime.strptime(s['date_exp'], '%d/%m/%Y') - datetime.today()).days:
+            return (datetime.strptime(s['date_exp'], '%d/%m/%Y') - datetime.today()).days
     if not user_is_subscriber:
         return False
         

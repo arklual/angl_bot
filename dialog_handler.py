@@ -39,7 +39,7 @@ async def voice_handler(message: Message):
                 if lang != 'ru' and lang != 'en':
                     await text_to_speech_send(
                         message.bot, message.chat.id,
-                        "Hey there! Looks like we speak different languages. Let's go back to English."
+                        "Hey there! Looks like we speak different languages. Let's get back to English."
                     )
                     return
                 response = await request_to_gpt(message.from_user.id, text)
@@ -131,7 +131,7 @@ async def handle_all_messages(message: Message):
         lang = list(langid.classify(message.text))[0]
         if lang != 'ru' and lang != 'en':
             await message.answer(
-                "Hey there! Looks like we speak different languages. Let's go back to English."
+                "Hey there! Looks like we speak different languages. Let's get back to English."
             )
             return
         response = await request_to_gpt(message.from_user.id, message.text)
@@ -152,10 +152,11 @@ async def check_grammar_once(message: Message):
     if is_subed:
         context = await get_context(message.from_user.id)
         message_to_check = context['messages'][-2]
+        print(message_to_check)
         lang = list(langid.classify(message_to_check))[0]
         if lang != 'ru' and lang != 'en':
             await message.answer(
-                "Hey there! Looks like we speak different languages. Let's go back to English."
+                "Hey there! Looks like we speak different languages. Let's get back to English."
             )
             return
         await create_new_context(

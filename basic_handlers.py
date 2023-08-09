@@ -9,24 +9,18 @@ import aiofiles
 import json
 
 
-async def read_json():
-    async with aiofiles.open('referals.json', mode="r", encoding='utf-8') as file:
-        content = await file.read()
-        data = json.loads(content)
-    return data
-
-async def write_json(data):
-    async with aiofiles.open('referals.json', mode="w", encoding='utf-8') as file:
-        await file.write(json.dumps(data, indent=4))
 
 async def add_user(data, user_id, referer_id=None):
     new_entry = {"user_id": user_id, "referer_id": referer_id}
     data.append(new_entry)
-    await write_json("referals.json", data)
+    async with aiofiles.open('referals.json', mode="w", encoding='utf-8') as file:
+        await file.write(json.dumps(data, indent=4, ensure_ascii=False))
   
 
 async def start(message: Message):
-    data = await read_json()
+    data = []
+    async with aiofiles.open('referals.json', mode="r", encoding='utf-8') as file:
+        data = json.loads(await file.read())
     user_id = message.from_user.id
     user_exists = any(entry["user_id"] == user_id for entry in data)
     if not user_exists:

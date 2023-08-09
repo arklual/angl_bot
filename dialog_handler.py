@@ -152,8 +152,7 @@ async def check_grammar_once(message: Message):
     if is_subed:
         context = await get_context(message.from_user.id)
         message_to_check = context['messages'][-2]
-        print(message_to_check)
-        lang = list(langid.classify(message_to_check))[0]
+        lang = list(langid.classify(str(message_to_check)))[0]
         if lang != 'ru' and lang != 'en':
             await message.answer(
                 "Hey there! Looks like we speak different languages. Let's get back to English."

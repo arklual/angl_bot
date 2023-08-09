@@ -3,7 +3,7 @@ import basic_handlers
 import payments
 import admin
 import dialog_handler
-import profile
+import user_profile
 
 
 async def register_all_handlers(dp: Dispatcher):

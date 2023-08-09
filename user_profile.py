@@ -24,7 +24,7 @@ async def profile(callback: CallbackQuery):
   await callback.answer()
   user_entry = await get_user_by_id(data, callback.from_user.id)
   is_subed = await check_subscription(callback.from_user.id)
-  lang = utils.get_user_language(message.from_user.id)
+  lang = utils.get_user_language(callback.from_user.id)
   if not is_subed:  
     if lang == 'ru':
       await callback.message.answer("""Вы не подписаны""", reply_markup = profile_kb_if_unsubed('ru', callback.from_user.id))

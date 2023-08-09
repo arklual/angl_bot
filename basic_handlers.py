@@ -187,6 +187,7 @@ async def change_mode(message: Message):
 async def change_mode_callback(callback: CallbackQuery):
     await callback.answer()
     mode = callback.data.strip('change_').strip('mode_')
+    print(mode)
     lang = utils.get_user_language(callback.from_user.id)
     mode = await utils.get_mode(mode)
     if lang == "en":

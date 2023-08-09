@@ -138,12 +138,12 @@ async def handle_all_messages(message: Message):
                          reply_markup=kb)
 
 
-async def check_grammar_once(m: Message):
+async def check_grammar_once(message: Message):
     context = await get_context(message.from_user.id)
     message_to_check = context['messages'][-2]
     await create_new_context(
         message.from_user.id, {
-            'messages': [],
+            'messages': [message_to_check],
             'mode': 'grammar',
             'is_male_voice': context['is_male_voice']
         })

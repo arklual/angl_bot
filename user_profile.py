@@ -27,9 +27,9 @@ async def profile(callback: CallbackQuery):
   lang = utils.get_user_language(callback.from_user.id)
   if not is_subed:  
     if lang == 'ru':
-      await callback.message.answer("""Вы не подписаны""", reply_markup = profile_kb_if_unsubed('ru', callback.from_user.id))
+      await callback.message.answer("""Вы не подписаны""", reply_markup = profile_kb_if_unsubed('ru'))
     elif lang == 'en':
-      await callback.message.answer("""You are not subscribed. """, reply_markup = profile_kb_if_unsubed('en', callback.from_user.id))
+      await callback.message.answer("""You are not subscribed. """, reply_markup = profile_kb_if_unsubed('en'))
   else:
     if lang == 'ru':
       await callback.message.answer(f"У вас осталось {is_subed} дней в подписке.\nВаша реф. ссылка: https://t.me/SkillbuddyBot?start={callback.from_user.id}", reply_markup=profile_kb_if_subed('ru', callback.from_user.id))

@@ -154,7 +154,8 @@ async def check_grammar_once(message: Message):
 
 
 async def register_handlers(dp: Dispatcher):
-    dp.register_message_handler(voice_handler, content_types=['voice'])
-    dp.register_message_handler(handle_all_messages)
     dp.register_message_handler(check_grammar_once,
                                 lambda m: m.text == 'Проверить грамматику')
+    dp.register_message_handler(voice_handler, content_types=['voice'])
+    dp.register_message_handler(handle_all_messages)
+

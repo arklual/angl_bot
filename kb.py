@@ -56,24 +56,12 @@ def profile_kb_if_subed(cur_lang, user_id):
     kb = types.InlineKeyboardMarkup()
     if cur_lang == 'ru':
         kb.add(
-            types.InlineKeyboardButton('Проверить подписку',
-                                       callback_data="check_sub"))
-        kb.add(
-            types.InlineKeyboardButton("Реферальная ссылка",
-                                       callback_data='check_ref_link'))
-        kb.add(
             types.InlineKeyboardButton(
                 'Поделиться реф. ссылкой',
                 url=
                 f'https://t.me/share/url?url=t.me/SkillbuddyBot?start={user_id}&text=SkillBuddy'
             ))
     elif cur_lang == "en":
-        kb.add(
-            types.InlineKeyboardButton('Check subscription',
-                                       callback_data="check_sub"))
-        kb.add(
-            types.InlineKeyboardButton("Referal link",
-                                       callback_data='check_ref_link'))
         kb.add(
             types.InlineKeyboardButton(
                 'Share referal link',

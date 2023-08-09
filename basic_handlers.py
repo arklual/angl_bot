@@ -10,13 +10,13 @@ import json
 
 
 async def read_json():
-    async with aiofiles.open('referals.json', mode="r") as file:
+    async with aiofiles.open('referals.json', mode="r", encoding='utf-8') as file:
         content = await file.read()
         data = json.loads(content)
     return data
 
 async def write_json(data):
-    async with aiofiles.open('referals.json', mode="w") as file:
+    async with aiofiles.open('referals.json', mode="w", encoding='utf-8') as file:
         await file.write(json.dumps(data, indent=4))
 
 async def add_user(data, user_id, referer_id=None):
@@ -88,9 +88,9 @@ async def menu(message: Message):
 async def help_callback(callback:CallbackQuery):
     lang = utils.get_user_language(callback.from_user.id)
     if lang == "en":
-        await message.bot.send_photo(callback.from_user.id, "./images/helper_icon_en.jpg", capture=HELP_MESSAGE_EN)
+        await callback.bot.send_photo(callback.from_user.id, "./images/helper_icon_en.jpg", capture=HELP_MESSAGE_EN)
     elif lang == "ru":
-        await message.bot.send_photo(callback.from_user.id, "./images/helper_icon.jpg", capture=HELP_MESSAGE_RU)
+        await callback.bot.send_photo(callback.from_user.id, "./images/helper_icon.jpg", capture=HELP_MESSAGE_RU)
     
 async def tutorial(message:Message):
   lang = utils.get_user_language(message.from_user.id)

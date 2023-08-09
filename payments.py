@@ -25,7 +25,7 @@ async def subscribe(message: Message):
         description='Активация подписки на бота на 1 месяц',
         provider_token=PAYMENT_TOKEN_TEST,
         currency='rub',
-        photo_url='./images/SB.JPG',
+        photo_url=pic,
         photo_width=416,
         photo_height=234,
         photo_size=416,

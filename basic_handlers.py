@@ -84,6 +84,7 @@ async def menu(message: Message):
             await message.bot.send_photo(message.from_user.id, await fp.read(), "Главное меню", reply_markup=await menu_keyboard('ru'))
 
 async def help_callback(callback:CallbackQuery):
+    await callback.answer()
     lang = utils.get_user_language(callback.from_user.id)
     if lang == "en":
         async with aiofiles.open("./images/helper_icon_en.jpg", 'rb') as fp:

@@ -136,7 +136,7 @@ async def handle_all_messages(message: Message):
             return
         response = await request_to_gpt(message.from_user.id, message.text)
         kb = ReplyKeyboardMarkup([
-            ['Проверить грамматику'],
+            ['Check for grammar correctness'],
         ],
                                 resize_keyboard=True,
                                 one_time_keyboard=True)
@@ -152,6 +152,12 @@ async def check_grammar_once(message: Message):
     if is_subed:
         context = await get_context(message.from_user.id)
         message_to_check = context['messages'][-2]
+        lang = list(langid.classify(message_to_check))[0]
+        if lang != 'ru' and lang != 'en':
+            await message.answer(
+                "Hey there! Looks like we speak different languages. Let's go back to English."
+            )
+            return
         await create_new_context(
             message.from_user.id, {
                 'messages': [],
@@ -168,7 +174,7 @@ async def check_grammar_once(message: Message):
 
 async def register_handlers(dp: Dispatcher):
     dp.register_message_handler(check_grammar_once,
-                                lambda m: m.text == 'Проверить грамматику')
+                                lambda m: m.text == 'Check for grammar correctness')
     dp.register_message_handler(voice_handler, content_types=['voice'])
     dp.register_message_handler(handle_all_messages)
 

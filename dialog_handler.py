@@ -149,7 +149,7 @@ async def check_grammar_once(message: Message):
         })
     response = await request_to_gpt(message.from_user.id,
                                     str(message_to_check))
-    await create_new_context(context)
+    await create_new_context(message.from_user.id, context)
     await message.answer(response)
 
 

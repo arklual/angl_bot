@@ -46,12 +46,12 @@ async def start(message: Message):
     
     # Отправляем приветственное сообщение на текущем языке
     if lang == "en":
-      await message.bot.send_photo(message.from_user.id,"./images/start_en.jpg", caption=START_MESSAGES_EN[random.randint(0, 
+      async with aiofiles.open("./images/start_en.jpg", 'rb') as fp:
+        await message.bot.send_photo(message.from_user.id, await fp.read(), caption=START_MESSAGES_EN[random.randint(0, 
 len(START_MESSAGES_EN)-1)], reply_markup=await menu_keyboard('en'))
     elif lang == "ru":
-        await message.bot.send_photo(message.from_user.id, "./images/start_ru.jpg", caption=START_MESSAGES_RU[random.randint(0, len(START_MESSAGES_RU)-1)], reply_markup=await menu_keyboard('ru'))
-    else:
-        await message.bot.send_photo(message.from_user.id, "./images/start_en.jpg", caption=START_MESSAGES_EN[random.randint(0, len(START_MESSAGES_EN)-1)], reply_markup=await menu_keyboard('en'))
+        async with aiofiles.open("./images/start_ru.jpg", 'rb') as fp:
+            await message.bot.send_photo(message.from_user.id, await fp.read(), caption=START_MESSAGES_RU[random.randint(0, len(START_MESSAGES_RU)-1)], reply_markup=await menu_keyboard('ru'))
     await utils.create_new_context(message.from_user.id, context)
 
 async def reset(message: Message):
@@ -68,23 +68,29 @@ async def reset(message: Message):
 async def help(message: Message):
     lang = utils.get_user_language(message.from_user.id)
     if lang == "en":
-        await message.bot.send_photo(message.from_user.id, "./images/helper_icon_en.jpg", caption=HELP_MESSAGE_EN)
+        async with aiofiles.open("./images/helper_icon_en.jpg", 'rb') as fp:
+            await message.bot.send_photo(message.from_user.id, await fp.read(), caption=HELP_MESSAGE_EN)
     elif lang == "ru":
-        await message.bot.send_photo(message.from_user.id, "./images/helper_icon.jpg", caption=HELP_MESSAGE_RU)
+        async with aiofiles.open("./images/helper_icon.jpg", 'rb') as fp:
+            await message.bot.send_photo(message.from_user.id, await fp.read(), caption=HELP_MESSAGE_RU)
 
 async def menu(message: Message):
     lang = utils.get_user_language(message.from_user.id)
     if lang == "en":
-        await message.bot.send_photo(message.from_user.id, "./images/helper_icon_en.jpg", caption="Main Menu\n Here you change modes and language", reply_markup=await menu_keyboard('en'))
+        async with aiofiles.open("./images/helper_icon_en.jpg", 'rb') as fp:
+            await message.bot.send_photo(message.from_user.id, await fp.read(), caption="Main Menu\n Here you change modes and language", reply_markup=await menu_keyboard('en'))
     elif lang == "ru":
-        await message.bot.send_photo(message.from_user.id, "./images/helper_icon.jpg", "Главное меню", reply_markup=await menu_keyboard('ru'))
+        async with aiofiles.open("./images/helper_icon.jpg", 'rb') as fp:
+            await message.bot.send_photo(message.from_user.id, await fp.read(), "Главное меню", reply_markup=await menu_keyboard('ru'))
 
 async def help_callback(callback:CallbackQuery):
     lang = utils.get_user_language(callback.from_user.id)
     if lang == "en":
-        await callback.bot.send_photo(callback.from_user.id, "./images/helper_icon_en.jpg", caption=HELP_MESSAGE_EN)
+        async with aiofiles.open("./images/helper_icon_en.jpg", 'rb') as fp:
+            await callback.bot.send_photo(callback.from_user.id, await fp.read(), caption=HELP_MESSAGE_EN)
     elif lang == "ru":
-        await callback.bot.send_photo(callback.from_user.id, "./images/helper_icon.jpg", caption=HELP_MESSAGE_RU)
+        async with aiofiles.open("./images/helper_icon.jpg", 'rb') as fp:
+            await callback.bot.send_photo(callback.from_user.id, await fp.read(), caption=HELP_MESSAGE_RU)
     
 async def tutorial(message:Message):
   lang = utils.get_user_language(message.from_user.id)

@@ -87,7 +87,7 @@ def profile_kb_if_unsubed(cur_lang):
     kb = types.InlineKeyboardMarkup()
     if cur_lang == 'ru':
         kb.add(
-            types.InlineKeyboardButton('Купить подписку', callback_data="sub"))
+            types.InlineKeyboardButton('Купить подписку', callback_data="subscribe"))
     elif cur_lang == "en":
-        kb.add(types.InlineKeyboardButton('Subscribe', callback_data="sub"))
+        kb.add(types.InlineKeyboardButton('Subscribe', callback_data="subscribe"))
     return kb

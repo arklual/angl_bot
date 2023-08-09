@@ -148,7 +148,7 @@ async def check_grammar_once(message: Message):
             'is_male_voice': context['is_male_voice']
         })
     response = await request_to_gpt(message.from_user.id,
-                                    message_to_check)
+                                    str(message_to_check))
     await create_new_context(context)
     await message.answer(response)
 

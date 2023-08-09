@@ -65,7 +65,7 @@ def profile_kb_if_subed(cur_lang, user_id):
             types.InlineKeyboardButton(
                 'Поделиться реф. ссылкой',
                 url=
-                f'https://t.me/share/url?url="https://t.me/SkillbuddyBot?start={user_id}"&text="SkillBuddy"'
+                f'https://t.me/share/url?url="t.me/SkillbuddyBot?start={user_id}"&text="SkillBuddy"'
             ))
     elif cur_lang == "en":
         kb.add(

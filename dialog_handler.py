@@ -151,7 +151,16 @@ async def check_grammar_once(message: Message):
     is_subed = await check_subscription(message.from_user.id)
     if is_subed:
         context = await get_context(message.from_user.id)
-        message_to_check = context['messages'][-2]
+        message_to_check = ""
+        for i in context['messages'][::-1]:
+            if i['from'] == 'user':
+                message_to_check = i['message']
+                break
+        if message_to_check == "":
+            await message.answer(
+                "You didn\'t write anything."
+            )
+            return
         lang = list(langid.classify(str(message_to_check)))[0]
         if lang != 'ru' and lang != 'en':
             await message.answer(

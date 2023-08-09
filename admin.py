@@ -66,7 +66,7 @@ async def admin_callback(callback: CallbackQuery):
 
 async def mode_info(callback: CallbackQuery):
     await callback.answer()
-    mode = callback.data.strip('admin_mode_')
+    mode = callback.data.split('dmin_mode_')[-1]
     mode = await utils.get_mode(mode)
     kb = InlineKeyboardMarkup()
     kb.add(InlineKeyboardButton('Изменить промпт', callback_data=f'admin_change_prompt_{mode["name"]}'))

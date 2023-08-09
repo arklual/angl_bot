@@ -17,7 +17,7 @@ async def subscribe(message: Message):
         async with aiofiles.open('./images/SB.JPG', mode='rb') as file:
             pic = file
     elif lang == 'ru':
-        async with aiofiles.open('./images/СБ.JPG', mode='rb') as file:
+        async with aiofiles.open('./images/sb_ru.JPG', mode='rb') as file:
             pic = file
     await message.bot.send_invoice(
         message.chat.id,

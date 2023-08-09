@@ -80,6 +80,7 @@ def profile_kb_if_subed(cur_lang, user_id):
                 url=
                 f'https://t.me/share/url?url="https://t.me/SkillbuddyBot?start={user_id}"&text="SkillBuddy"'
             ))
+    return kb
 
 
 def profile_kb_if_unsubed(cur_lang):
@@ -89,3 +90,4 @@ def profile_kb_if_unsubed(cur_lang):
             types.InlineKeyboardButton('Купить подписку', callback_data="sub"))
     elif cur_lang == "en":
         kb.add(types.InlineKeyboardButton('Subscribe', callback_data="sub"))
+    return kb

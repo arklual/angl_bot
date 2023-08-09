@@ -14,10 +14,10 @@ async def subscribe(message: Message):
         await message.answer('Тестовый платеж')
     lang = utils.get_user_language(message.from_user.id)
     if lang == 'en':
-        async with aiofiles('./images/SB.JPG', mode='rb') as file:
+        async with aiofiles.open('./images/SB.JPG', mode='rb') as file:
             pic = file
     elif lang == 'ru':
-        async with aiofiles('./images/СБ.JPG', mode='rb') as file:
+        async with aiofiles.open('./images/СБ.JPG', mode='rb') as file:
             pic = file
     await message.bot.send_invoice(
         message.chat.id,

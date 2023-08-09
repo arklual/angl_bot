@@ -77,8 +77,7 @@ def profile_kb_if_subed(cur_lang, user_id):
         kb.add(
             types.InlineKeyboardButton(
                 'Share referal link',
-                url=
-                f'https://t.me/share/url?url="https://t.me/SkillbuddyBot?start={user_id}"&text="SkillBuddy"'
+                url=f'https://t.me/share/url?url="t.me/SkillbuddyBot?start={user_id}"&text="SkillBuddy"'
             ))
     return kb
 

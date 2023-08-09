@@ -4,6 +4,7 @@ from aiogram.types import *
 from datetime import datetime, timedelta
 import aiofiles
 import json
+import utils
 
 PRICE = LabeledPrice(label='Подписка на 1 месяц', amount=500 * 100)  # 500 rub
 
@@ -11,14 +12,20 @@ PRICE = LabeledPrice(label='Подписка на 1 месяц', amount=500 * 10
 async def subscribe(message: Message):
     if PAYMENT_TOKEN_TEST.split(':')[1] == "TEST":
         await message.answer('Тестовый платеж')
+    lang = utils.get_user_language(message.from_user.id)
+    if lang == 'en':
+        async with aiofiles('./images/SB.JPG', mode='rb') as file:
+            pic = file
+    elif lang == 'ru':
+        async with aiofiles('./images/СБ.JPG', mode='rb') as file:
+            pic = file
     await message.bot.send_invoice(
         message.chat.id,
         title="Подписка на бота",
         description='Активация подписки на бота на 1 месяц',
         provider_token=PAYMENT_TOKEN_TEST,
         currency='rub',
-        photo_url=
-        'https://media.istockphoto.com/id/679762242/ru/%D0%B2%D0%B5%D0%BA%D1%82%D0%BE%D1%80%D0%BD%D0%B0%D1%8F/%D0%B1%D0%B8%D0%B7%D0%BD%D0%B5%D1%81%D0%BC%D0%B5%D0%BD-%D0%B8%D0%BB%D0%B8-%D1%82%D0%BE%D1%80%D0%B3%D0%BE%D0%B2%D0%B5%D1%86-%D0%BD%D0%B0-%D1%84%D0%BE%D0%BD%D0%B4%D0%BE%D0%B2%D0%BE%D0%BC-%D1%80%D1%8B%D0%BD%D0%BA%D0%B5-%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%D1%8E%D1%89%D0%B8%D0%B9-%D0%B7%D0%B0-%D1%81%D1%82%D0%BE%D0%BB%D0%BE%D0%BC.jpg?s=1024x1024&w=is&k=20&c=OsEncaxRjp-sbXTQUGF7XtFfSHvG03Cvu1JNl8kis7Y=',
+        photo_url=pic,
         photo_width=416,
         photo_height=234,
         photo_size=416,

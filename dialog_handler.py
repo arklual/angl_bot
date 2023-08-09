@@ -1,19 +1,24 @@
 import traceback
 from aiogram import Dispatcher
+from aiogram.types import *
 from utils import *
 from strings import *
 import langid
-import speech_recognition as sr 
+import os
+import speech_recognition as sr
 
 
 async def voice_handler(message: Message):
     file_id = message.voice.file_id
     file_info = await message.bot.get_file(file_id)
-    file_path = file_info.file_path 
-    await message.bot.download_file(file_path, f"voices/voice{message.from_user.id}.oga")
+    file_path = file_info.file_path
+    await message.bot.download_file(file_path,
+                                    f"voices/voice{message.from_user.id}.oga")
 
     # Используйте ffmpeg для конвертации аудио из формата .oga в .wav
-    os.system(f'ffmpeg -i voices/voice{message.from_user.id}.oga voices/voice{message.from_user.id}.wav')
+    os.system(
+        f'ffmpeg -i voices/voice{message.from_user.id}.oga voices/voice{message.from_user.id}.wav'
+    )
 
     # Загрузите аудиофайл и преобразуйте речь в текст
     r = sr.Recognizer()
@@ -22,14 +27,28 @@ async def voice_handler(message: Message):
         try:
             text = r.recognize_google(audio_text, language='eng')
             if await has_cursed_word(text):
-                await text_to_speech_send(message.bot, message.chat.id, "Прошу вести корректный диалог или Попробуйте сформулировать ответ без использования запрещенных слов, мы не поддерживаем беседы на данную тему\n\n-----\n\nI ask you to conduct a correct dialogue or try to formulate an answer without using forbidden words. We do not support conversations on this topic")
+                await text_to_speech_send(
+                    message.bot, message.chat.id,
+                    "Прошу вести корректный диалог или Попробуйте сформулировать ответ без использования запрещенных слов, мы не поддерживаем беседы на данную тему\n\n-----\n\nI ask you to conduct a correct dialogue or try to formulate an answer without using forbidden words. We do not support conversations on this topic"
+                )
                 return
             lang = list(langid.classify(text))[0]
-            if  lang != 'ru' and lang != 'en':
-                await text_to_speech_send(message.bot, message.chat.id, "Hey there! Looks like we speak different languages. Let's go back to English.")
+            if lang != 'ru' and lang != 'en':
+                await text_to_speech_send(
+                    message.bot, message.chat.id,
+                    "Hey there! Looks like we speak different languages. Let's go back to English."
+                )
                 return
             response = await request_to_gpt(message.from_user.id, text)
-            await text_to_speech_send(message.bot, message.chat.id, response)
+            kb = ReplyKeyboardMarkup([
+                ['Проверить грамматику'],
+            ],
+                                     resize_keyboard=True,
+                                     one_time_keyboard=True)
+            await text_to_speech_send(message.bot,
+                                      message.chat.id,
+                                      response,
+                                      reply_markup=kb)
         except Exception as e:
             traceback.print_exc()
             text = "Sorry, I did not get that"
@@ -38,21 +57,26 @@ async def voice_handler(message: Message):
             os.system(f'rm voices/voice{message.from_user.id}.oga')
             os.system(f'rm voices/voice{message.from_user.id}.wav')
 
+
 async def handle_all_messages(message: Message):
     if await has_cursed_word(message.text):
-        await message.answer('Прошу вести корректный диалог или Попробуйте сформулировать ответ без использования запрещенных слов, мы не поддерживаем беседы на данную тему\n\n-----\n\nI ask you to conduct a correct dialogue or try to formulate an answer without using forbidden words. We do not support conversations on this topic')
+        await message.answer(
+            'Прошу вести корректный диалог или Попробуйте сформулировать ответ без использования запрещенных слов, мы не поддерживаем беседы на данную тему\n\n-----\n\nI ask you to conduct a correct dialogue or try to formulate an answer without using forbidden words. We do not support conversations on this topic'
+        )
         return
     if message.reply_to_message and message.reply_to_message.text:
         if '/' in message.text:
             mode = message.text.replace('/', '')
             context = await get_context(message.from_user.id)
-            await create_new_context(message.from_user.id, {
-                'messages': [],
-                'mode': mode,
-                'is_male_voice': context['is_male_voice']
-            })
+            await create_new_context(
+                message.from_user.id, {
+                    'messages': [],
+                    'mode': mode,
+                    'is_male_voice': context['is_male_voice']
+                })
             await change_mode(message.from_user.id, mode)
-            response = await request_to_gpt(message.from_user.id, message.reply_to_message.text)
+            response = await request_to_gpt(message.from_user.id,
+                                            message.reply_to_message.text)
             await message.answer(response)
             await create_new_context(message.from_user.id, context)
             return
@@ -60,28 +84,36 @@ async def handle_all_messages(message: Message):
         if '/' in message.text:
             mode = message.text.replace('/', '')
             context = await get_context(message.from_user.id)
-            await create_new_context(message.from_user.id, {
-                'messages': [],
-                'mode': mode,
-                'is_male_voice': context['is_male_voice']
-            })
+            await create_new_context(
+                message.from_user.id, {
+                    'messages': [],
+                    'mode': mode,
+                    'is_male_voice': context['is_male_voice']
+                })
             await change_mode(message.from_user.id, mode)
             file_id = message.reply_to_message.voice.file_id
             file_info = await message.bot.get_file(file_id)
-            file_path = file_info.file_path 
-            await message.bot.download_file(file_path, f"voices/voice{message.from_user.id}.oga")
+            file_path = file_info.file_path
+            await message.bot.download_file(
+                file_path, f"voices/voice{message.from_user.id}.oga")
 
             # Используйте ffmpeg для конвертации аудио из формата .oga в .wav
-            os.system(f'ffmpeg -i voices/voice{message.from_user.id}.oga voices/voice{message.from_user.id}.wav')
+            os.system(
+                f'ffmpeg -i voices/voice{message.from_user.id}.oga voices/voice{message.from_user.id}.wav'
+            )
 
             # Загрузите аудиофайл и преобразуйте речь в текст
             r = sr.Recognizer()
-            with sr.AudioFile(f'voices/voice{message.from_user.id}.wav') as source:
+            with sr.AudioFile(
+                    f'voices/voice{message.from_user.id}.wav') as source:
                 audio_text = r.listen(source)
                 try:
                     text = r.recognize_google(audio_text, language='eng')
                     if await has_cursed_word(text):
-                        await text_to_speech_send(message.bot, message.chat.id, "Прошу вести корректный диалог или Попробуйте сформулировать ответ без использования запрещенных слов, мы не поддерживаем беседы на данную тему\n\n-----\n\nI ask you to conduct a correct dialogue or try to formulate an answer without using forbidden words. We do not support conversations on this topic")
+                        await text_to_speech_send(
+                            message.bot, message.chat.id,
+                            "Прошу вести корректный диалог или Попробуйте сформулировать ответ без использования запрещенных слов, мы не поддерживаем беседы на данную тему\n\n-----\n\nI ask you to conduct a correct dialogue or try to formulate an answer without using forbidden words. We do not support conversations on this topic"
+                        )
                         return
                 except Exception as e:
                     await message.answer("I didn't get it")
@@ -90,12 +122,39 @@ async def handle_all_messages(message: Message):
             await text_to_speech_send(message.bot, message.chat.id, response)
             return
     lang = list(langid.classify(message.text))[0]
-    if  lang != 'ru' and lang != 'en':
-        await message.answer("Hey there! Looks like we speak different languages. Let's go back to English.")
+    if lang != 'ru' and lang != 'en':
+        await message.answer(
+            "Hey there! Looks like we speak different languages. Let's go back to English."
+        )
         return
     response = await request_to_gpt(message.from_user.id, message.text)
-    await message.answer(response, parse_mode=ParseMode.MARKDOWN)
+    kb = ReplyKeyboardMarkup([
+        ['Проверить грамматику'],
+    ],
+                             resize_keyboard=True,
+                             one_time_keyboard=True)
+    await message.answer(response,
+                         parse_mode=ParseMode.MARKDOWN,
+                         reply_markup=kb)
+
+
+async def check_grammar_once(m: Message):
+    context = await get_context(message.from_user.id)
+    message_to_check = context['messages'][-2]
+    await create_new_context(
+        message.from_user.id, {
+            'messages': [],
+            'mode': 'grammar',
+            'is_male_voice': context['is_male_voice']
+        })
+    response = await request_to_gpt(message.from_user.id,
+                                    message.reply_to_message.text)
+    await create_new_context(context)
+    await message.answer(response)
+
 
 async def register_handlers(dp: Dispatcher):
     dp.register_message_handler(voice_handler, content_types=['voice'])
     dp.register_message_handler(handle_all_messages)
+    dp.register_message_handler(check_grammar_once,
+                                lambda m: m.text == 'Проверить грамматику')

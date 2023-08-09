@@ -5,23 +5,59 @@ from aiogram.types import *
 from kb import menu_keyboard
 import utils
 from strings import *
+import aiofiles
+import json
 
+
+async def read_json():
+    async with aiofiles.open('referals.json', mode="r") as file:
+        content = await file.read()
+        data = json.loads(content)
+    return data
+
+async def write_json(data):
+    async with aiofiles.open('referals.json', mode="w") as file:
+        await file.write(json.dumps(data, indent=4))
+
+async def add_user(data, user_id, referer_id=None):
+    new_entry = {"user_id": user_id, "referer_id": referer_id}
+    data.append(new_entry)
+    await write_json("referals.json", data)
+  
 
 async def start(message: Message):
+    data = await read_json()
+    user_id = message.from_user.id
+    user_exists = any(entry["user_id"] == user_id for entry in data)
+    if not user_exists:
+      start_command = message.text
+      referer_id = start_command[7:]
+      if referer_id:
+        referer_id = int(referer_id)
+        if referer_id != user_id:
+          await add_user(data, user_id, referer_id)
+          await message.bot.send_message(int(referer_id), 'По вашей ссылке зарегистрировался новый пользователь')
+        else:
+          await add_user(data, user_id, None)
+          await message.answer("Нельзя регистрироваться по своей реферальной ссылке")
+      else:
+        await add_user(data, user_id, None)
+
     context = {
         'messages':[],
         'mode': 'grammar',
         'is_male_voice': True,
     }
     lang = utils.get_user_language(message.from_user.id)
-
+    
     # Отправляем приветственное сообщение на текущем языке
     if lang == "en":
-        await message.answer(START_MESSAGES_EN[random.randint(0, len(START_MESSAGES_EN)-1)], reply_markup=await menu_keyboard('en'))
+      await message.bot.send_photo(message.from_user.id,"./images/start_en.jpg", capture=START_MESSAGES_EN[random.randint(0, 
+len(START_MESSAGES_EN)-1)], reply_markup=await menu_keyboard('en'))
     elif lang == "ru":
-        await message.answer(START_MESSAGES_RU[random.randint(0, len(START_MESSAGES_RU)-1)], reply_markup=await menu_keyboard('ru'))
+        await message.bot.send_photo(message.from_user.id, "./images/start_ru.jpg", capture=START_MESSAGES_RU[random.randint(0, len(START_MESSAGES_RU)-1)], reply_markup=await menu_keyboard('ru'))
     else:
-        await message.answer(START_MESSAGES_EN[random.randint(0, len(START_MESSAGES_EN)-1)], reply_markup=await menu_keyboard('en'))
+        await message.bot.send_photo(message.from_user.id, "./images/start_en.jpg", capture=START_MESSAGES_EN[random.randint(0, len(START_MESSAGES_EN)-1)], reply_markup=await menu_keyboard('en'))
     await utils.create_new_context(message.from_user.id, context)
 
 async def reset(message: Message):
@@ -34,24 +70,43 @@ async def reset(message: Message):
         await message.answer("You have started a new session")
     elif lang == "ru":
         await message.answer("Вы начали новую сессию")
-    else:
-        await message.answer("Hello! I'm your bot.")
 
 async def help(message: Message):
     lang = utils.get_user_language(message.from_user.id)
     if lang == "en":
-        await message.answer(HELP_MESSAGE_EN)
+        await message.bot.send_photo(message.from_user.id, "./images/helper_icon_en.jpg", capture=HELP_MESSAGE_EN)
     elif lang == "ru":
-        await message.answer(HELP_MESSAGE_RU)
-    else:
-        await message.answer(HELP_MESSAGE_EN)
+        await message.bot.send_photo(message.from_user.id, "./images/helper_icon.jpg", capture=HELP_MESSAGE_RU)
 
 async def menu(message: Message):
     lang = utils.get_user_language(message.from_user.id)
     if lang == "en":
-        await message.answer("Main Menu\n Here you change modes and language", reply_markup=await menu_keyboard('en'))
+        await message.bot.send_photo(message.from_user.id, "./images/helper_icon_en.jpg", capture="Main Menu\n Here you change modes and language", reply_markup=await menu_keyboard('en'))
     elif lang == "ru":
-        await message.answer("Главное меню", reply_markup=await menu_keyboard('ru'))
+        await message.bot.send_photo(message.from_user.id, "./images/helper_icon.jpg", "Главное меню", reply_markup=await menu_keyboard('ru'))
+
+async def help_callback(callback:CallbackQuery):
+    lang = utils.get_user_language(callback.from_user.id)
+    if lang == "en":
+        await message.bot.send_photo(callback.from_user.id, "./images/helper_icon_en.jpg", capture=HELP_MESSAGE_EN)
+    elif lang == "ru":
+        await message.bot.send_photo(callback.from_user.id, "./images/helper_icon.jpg", capture=HELP_MESSAGE_RU)
+    
+async def tutorial(message:Message):
+  lang = utils.get_user_language(message.from_user.id)
+  if lang == "en":
+    await message.answer('Tutorial')
+  elif lang == "ru":
+    await message.answer('Туториал')
+
+async def tutorial_callback(callback: CallbackQuery):
+  await callback.answer()
+  lang = utils.get_user_language(callback.from_user.id)
+  if lang == "en":
+    await callback.message.answer('Tutorial')
+  elif lang == "ru":
+    await callback.message.answer('Туториал')
+  
 
 async def ru_lang(callback_query: CallbackQuery):
     utils.set_user_language(callback_query.from_user.id, 'ru')
@@ -144,6 +199,7 @@ async def register_handlers(dp: Dispatcher):
     dp.register_message_handler(reset, commands=['reset'])
     dp.register_message_handler(help, commands=['help'])
     dp.register_message_handler(menu, commands=['menu'])
+    dp.register_message_handler(tutorial, commands=['tutorial'])
     dp.register_message_handler(voice, commands=['voice'])
     dp.register_message_handler(change_mode, lambda m: m.text.startswith('/') and not m.reply_to_message)
     
@@ -151,6 +207,8 @@ async def register_handlers(dp: Dispatcher):
 async def register_callbacks(dp: Dispatcher):
     dp.register_callback_query_handler(ru_lang, lambda callback_query: callback_query.data == 'ru_lang')
     dp.register_callback_query_handler(en_lang, lambda callback_query: callback_query.data == 'en_lang')
+    dp.register_callback_query_handler(help_callback, lambda callback: callback.data == 'help')
+    dp.register_callback_query_handler(tutorial_callback, lambda callback: callback.data == 'tutorial')
     dp.register_callback_query_handler(voice_callback, lambda callback:  callback.data == 'voice')
     dp.register_callback_query_handler(change_mode_callback, lambda callback:  callback.data.startswith("change_mode_"))
     dp.register_callback_query_handler(female_voice, lambda callback_query: callback_query.data == 'female_voice')

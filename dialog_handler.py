@@ -44,7 +44,7 @@ async def voice_handler(message: Message):
                     return
                 response = await request_to_gpt(message.from_user.id, text)
                 kb = ReplyKeyboardMarkup([
-                    ['Проверить грамматику'],
+                    ['Check grammar'],
                 ],
                                         resize_keyboard=True,
                                         one_time_keyboard=True)
@@ -136,7 +136,7 @@ async def handle_all_messages(message: Message):
             return
         response = await request_to_gpt(message.from_user.id, message.text)
         kb = ReplyKeyboardMarkup([
-            ['Check for grammar correctness'],
+            ['Check grammar'],
         ],
                                 resize_keyboard=True,
                                 one_time_keyboard=True)
@@ -183,7 +183,7 @@ async def check_grammar_once(message: Message):
 
 async def register_handlers(dp: Dispatcher):
     dp.register_message_handler(check_grammar_once,
-                                lambda m: m.text == 'Check for grammar correctness')
+                                lambda m: m.text == 'Check grammar')
     dp.register_message_handler(voice_handler, content_types=['voice'])
     dp.register_message_handler(handle_all_messages)
 

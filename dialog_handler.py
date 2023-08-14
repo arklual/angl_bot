@@ -30,10 +30,15 @@ async def voice_handler(message: Message):
             try:
                 text = r.recognize_google(audio_text, language='eng')
                 if await has_cursed_word(text):
-                    await text_to_speech_send(
-                        message.bot, message.chat.id,
-                        "Прошу вести корректный диалог или Попробуйте сформулировать ответ без использования запрещенных слов, мы не поддерживаем беседы на данную тему\n\n-----\n\nI ask you to conduct a correct dialogue or try to formulate an answer without using forbidden words. We do not support conversations on this topic"
-                    )
+                    l = get_user_language(message.from_user.id)
+                    if l == 'ru:':
+                        await message.answer(
+                            'Прошу вести корректный диалог или Попробуйте сформулировать ответ без использования запрещенных слов, мы не поддерживаем беседы на данную тему'
+                        )
+                    elif l == 'en':
+                        await message.answer(
+                            'I ask you to conduct a correct dialogue or try to formulate an answer without using forbidden words. We do not support conversations on this topic'
+                        )
                     return
                 lang = list(langid.classify(text))[0]
                 if lang != 'ru' and lang != 'en':
@@ -67,9 +72,15 @@ async def handle_all_messages(message: Message):
     is_subed = await check_subscription(message.from_user.id)
     if is_subed:
         if await has_cursed_word(message.text):
-            await message.answer(
-                'Прошу вести корректный диалог или Попробуйте сформулировать ответ без использования запрещенных слов, мы не поддерживаем беседы на данную тему\n\n-----\n\nI ask you to conduct a correct dialogue or try to formulate an answer without using forbidden words. We do not support conversations on this topic'
-            )
+            l = get_user_language(message.from_user.id)
+            if l == 'ru:':
+                await message.answer(
+                    'Прошу вести корректный диалог или Попробуйте сформулировать ответ без использования запрещенных слов, мы не поддерживаем беседы на данную тему'
+                )
+            elif l == 'en':
+                await message.answer(
+                    'I ask you to conduct a correct dialogue or try to formulate an answer without using forbidden words. We do not support conversations on this topic'
+                )
             return
         if message.reply_to_message and message.reply_to_message.text:
             if '/' in message.text:

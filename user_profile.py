@@ -6,6 +6,7 @@ import aiofiles
 import json
 from payments import check_subscription
 from kb import *
+from string import get_ref_link_text
 
 async def read_json():
     async with aiofiles.open('referals.json', mode="r",encoding='utf-8') as file:
@@ -35,7 +36,22 @@ async def profile(callback: CallbackQuery):
       await callback.message.answer(f"У вас осталось {is_subed} дней в подписке.\nВаша реф. ссылка: https://t.me/SkillbuddyBot?start={callback.from_user.id}", reply_markup=profile_kb_if_subed('ru', callback.from_user.id))
     elif  lang == 'en':
       await callback.message.answer(f"Days left in your subscription: {is_subed} days\Your referal link: https://t.me/SkillbuddyBot?start={callback.from_user.id}", reply_markup=profile_kb_if_subed('en', callback.from_user.id))
-  
+
+async def share_ref_link(callback: CallbackQuery):
+  callback.answer()
+  kb = InlineKeyboardMarkup()
+  lang = utils.get_user_language(callback.from_user.id)
+  if lang == 'ru':
+    msg = 'Выберите текст:\n'
+  elif lang == 'en':
+    msg = 'Choose the text:\n'
+  for i in range(1, 10):   
+    ref_text = get_ref_link_text(i-1, f"https://t.me/SkillbuddyBot?start={callback.from_user.id}")
+    msg += f'{i}. {ref_text}\n'
+    kb.add(InlineKeyboardButton(text=str(i), url=f'https://t.me/share/url?text={ref_text}'))
+
+
 
 async def register_callbacks(dp: Dispatcher):
     dp.register_callback_query_handler(profile, lambda callback_query: callback_query.data == 'user_profile')
+    dp.register_callback_query_handler(share_ref_link, lambda callback_query: callback_query.data == 'share_ref_link')

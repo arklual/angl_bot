@@ -53,6 +53,7 @@ async def menu_keyboard(cur_lang):
                                        callback_data='en_lang'))
         return main_menu
 
+#url=f'https://t.me/share/url?text=Будущее уже здесь 🤙 Тренируй свой английский со Skillbuddy! Попробовать бесплатно: https://t.me/SkillbuddyBot?start={user_id}'
 
 def profile_kb_if_subed(cur_lang, user_id):
     kb = types.InlineKeyboardMarkup()
@@ -60,13 +61,13 @@ def profile_kb_if_subed(cur_lang, user_id):
         kb.add(
             types.InlineKeyboardButton(
                 'Поделиться реф. ссылкой',
-                url=f'https://t.me/share/url?text=Будущее уже здесь 🤙 Тренируй свой английский со Skillbuddy! Попробовать бесплатно: https://t.me/SkillbuddyBot?start={user_id}'
+                callback_data='share_ref_link'
             ))
     elif cur_lang == "en":
         kb.add(
             types.InlineKeyboardButton(
                 'Share referal link',
-                url=f'https://t.me/share/url?text=Будущее уже здесь 🤙 Тренируй свой английский со Skillbuddy! Попробовать бесплатно: https://t.me/SkillbuddyBot?start={user_id}'
+                callback_data='share_ref_link'
             ))
     return kb
 

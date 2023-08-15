@@ -50,10 +50,11 @@ async def voice_handler(message: Message):
                 response = await request_to_gpt(message.from_user.id, text)
                 kb = ReplyKeyboardMarkup([
                     ['Check grammar'],
-                    ['Mark syllables and stresses'],
                 ],
                                         resize_keyboard=True,
                                         one_time_keyboard=True)
+                if (await get_context(message.chat.id))['mode'] == 'phonetics':
+                    kb.add(['Mark syllables and stresses'])
                 await text_to_speech_send(message.bot,
                                         message.chat.id,
                                         response,
@@ -149,10 +150,11 @@ async def handle_all_messages(message: Message):
         response = await request_to_gpt(message.from_user.id, message.text)
         kb = ReplyKeyboardMarkup([
             ['Check grammar'],
-            ['Mark syllables and stresses']
         ],
                                 resize_keyboard=True,
                                 one_time_keyboard=True)
+        if (await get_context(message.chat.id))['mode'] == 'phonetics':
+            kb.add(['Mark syllables and stresses'])
         await message.answer(response,
                             parse_mode=ParseMode.MARKDOWN,
                             reply_markup=kb)

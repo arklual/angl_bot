@@ -50,7 +50,8 @@ async def share_ref_link(callback: CallbackQuery):
     ref_text = get_ref_link_text(i-1, f"https://t.me/SkillbuddyBot?start={callback.from_user.id}")
     msg += f'{i}. {ref_text}\n'
     btns.append(InlineKeyboardButton(text=str(i), url=f'https://t.me/share/url?text={ref_text}'))
-  kb.row(*btns)
+  kb.row(*btns[:5])
+  kb.row(*btns[5:])
   await callback.message.answer(msg, reply_markup=kb)
 
 

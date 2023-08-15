@@ -6,7 +6,7 @@ import aiofiles
 import json
 from payments import check_subscription
 from kb import *
-from string import get_ref_link_text
+from strings import get_ref_link_text
 
 async def read_json():
     async with aiofiles.open('referals.json', mode="r",encoding='utf-8') as file:

@@ -45,10 +45,12 @@ async def share_ref_link(callback: CallbackQuery):
     msg = 'Выберите текст:\n'
   elif lang == 'en':
     msg = 'Choose the text:\n'
+  btns = []
   for i in range(1, 10):   
     ref_text = get_ref_link_text(i-1, f"https://t.me/SkillbuddyBot?start={callback.from_user.id}")
     msg += f'{i}. {ref_text}\n'
-    kb.add(InlineKeyboardButton(text=str(i), url=f'https://t.me/share/url?text={ref_text}'))
+    btns.append(InlineKeyboardButton(text=str(i), url=f'https://t.me/share/url?text={ref_text}'))
+  kb.row(*btns)
   await callback.message.answer(msg, reply_markup=kb)
 
 

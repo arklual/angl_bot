@@ -221,6 +221,7 @@ async def msas(message: Message):
                 'mode': 'phonetics2',
                 'is_male_voice': context['is_male_voice']
             })
+        await message.answer(message_to_check)
         response = await request_to_gpt(message.from_user.id,
                                         str(message_to_check))
         await create_new_context(message.from_user.id, context)

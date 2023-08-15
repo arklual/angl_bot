@@ -60,14 +60,13 @@ def profile_kb_if_subed(cur_lang, user_id):
         kb.add(
             types.InlineKeyboardButton(
                 'Поделиться реф. ссылкой',
-                url=
-                f'https://t.me/share/url?url=t.me/SkillbuddyBot?start={user_id}&text=SkillBuddy'
+                url=f'https://t.me/share/url?text=Будущее уже здесь 🤙 Тренируй свой английский со Skillbuddy! Попробовать бесплатно: https://t.me/SkillbuddyBot?start={user_id}'
             ))
     elif cur_lang == "en":
         kb.add(
             types.InlineKeyboardButton(
                 'Share referal link',
-                url=f'https://t.me/share/url?url=t.me/SkillbuddyBot?start={user_id}&text=SkillBuddy'
+                url=f'https://t.me/share/url?text=Будущее уже здесь 🤙 Тренируй свой английский со Skillbuddy! Попробовать бесплатно: https://t.me/SkillbuddyBot?start={user_id}'
             ))
     return kb
 

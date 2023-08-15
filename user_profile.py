@@ -38,7 +38,7 @@ async def profile(callback: CallbackQuery):
       await callback.message.answer(f"Days left in your subscription: {is_subed} days\Your referal link: https://t.me/SkillbuddyBot?start={callback.from_user.id}", reply_markup=profile_kb_if_subed('en', callback.from_user.id))
 
 async def share_ref_link(callback: CallbackQuery):
-  callback.answer()
+  await callback.answer()
   kb = InlineKeyboardMarkup()
   lang = utils.get_user_language(callback.from_user.id)
   if lang == 'ru':

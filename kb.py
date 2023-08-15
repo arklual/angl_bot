@@ -15,10 +15,11 @@ async def menu_keyboard(cur_lang):
             types.InlineKeyboardButton('Как пользоваться',
                                        callback_data='tutorial'))
         for mode in modes:
-            main_menu.add(
-                types.InlineKeyboardButton(
-                    f'Перейти в режим "{mode["verbose_name_ru"]}"',
-                    callback_data=f'change_mode_{mode["name"]}'))
+            if mode["name"] != 'phonetics2':
+                main_menu.add(
+                    types.InlineKeyboardButton(
+                        f'Перейти в режим "{mode["verbose_name_ru"]}"',
+                        callback_data=f'change_mode_{mode["name"]}'))
         main_menu.add(
             types.InlineKeyboardButton('Сменить голос', callback_data='voice'))
         main_menu.add(
@@ -37,10 +38,11 @@ async def menu_keyboard(cur_lang):
         main_menu.add(
             types.InlineKeyboardButton('Tutorial', callback_data='tutorial'))
         for mode in modes:
-            main_menu.add(
-                types.InlineKeyboardButton(
-                    f'Turn on "{mode["verbose_name_en"]}" mode',
-                    callback_data=f'change_mode_{mode["name"]}'))
+            if mode["name"] != 'phonetics2':
+                main_menu.add(
+                    types.InlineKeyboardButton(
+                        f'Turn on "{mode["verbose_name_en"]}" mode',
+                        callback_data=f'change_mode_{mode["name"]}'))
         main_menu.add(
             types.InlineKeyboardButton('Change voice', callback_data='voice'))
         main_menu.add(

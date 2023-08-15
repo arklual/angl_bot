@@ -50,6 +50,7 @@ async def voice_handler(message: Message):
                 response = await request_to_gpt(message.from_user.id, text)
                 kb = ReplyKeyboardMarkup([
                     ['Check grammar'],
+                    ['Mark syllables and stresses'],
                 ],
                                         resize_keyboard=True,
                                         one_time_keyboard=True)
@@ -148,6 +149,7 @@ async def handle_all_messages(message: Message):
         response = await request_to_gpt(message.from_user.id, message.text)
         kb = ReplyKeyboardMarkup([
             ['Check grammar'],
+            ['Mark syllables and stresses']
         ],
                                 resize_keyboard=True,
                                 one_time_keyboard=True)
@@ -191,10 +193,44 @@ async def check_grammar_once(message: Message):
     else:
         await message.answer("У вас нет подписки")
 
+async def msas(message: Message):
+    is_subed = await check_subscription(message.from_user.id)
+    if is_subed:
+        context = await get_context(message.from_user.id)
+        message_to_check = ""
+        for i in context['messages'][::-1]:
+            if i['from'] == 'user':
+                message_to_check = i['message']
+                break
+        if message_to_check == "":
+            await message.answer(
+                "You didn\'t write anything."
+            )
+            return
+        lang = list(langid.classify(str(message_to_check)))[0]
+        if lang != 'ru' and lang != 'en':
+            await message.answer(
+                "Hey there! Looks like we speak different languages. Let's get back to English."
+            )
+            return
+        await create_new_context(
+            message.from_user.id, {
+                'messages': [],
+                'mode': 'phonetics2',
+                'is_male_voice': context['is_male_voice']
+            })
+        response = await request_to_gpt(message.from_user.id,
+                                        str(message_to_check))
+        await create_new_context(message.from_user.id, context)
+        await message.answer(response)
+    else:
+        await message.answer("У вас нет подписки")
 
 async def register_handlers(dp: Dispatcher):
     dp.register_message_handler(check_grammar_once,
                                 lambda m: m.text == 'Check grammar')
+    dp.register_message_handler(msas,
+                                lambda m: m.text == 'Mark syllables and stresses')
     dp.register_message_handler(voice_handler, content_types=['voice'])
     dp.register_message_handler(handle_all_messages)
 

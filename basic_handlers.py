@@ -169,7 +169,7 @@ async def female_voice(callback: CallbackQuery):
 async def change_mode(message: Message):
     names = await utils.get_all_modes_name()
     mode = message.text.strip('/')
-    if mode not in names:
+    if mode not in names or mode == 'phonetics2':
         lang = utils.get_user_language(message.from_user.id)
         if lang == "en":
             await message.answer('This command doesn\'t exist')

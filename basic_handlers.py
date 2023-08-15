@@ -78,10 +78,10 @@ async def menu(message: Message):
     lang = utils.get_user_language(message.from_user.id)
     if lang == "en":
         async with aiofiles.open("./images/helper_icon_en.jpg", 'rb') as fp:
-            await message.bot.send_photo(message.from_user.id, await fp.read(), caption="Main Menu\n Here you change modes and language", reply_markup=await menu_keyboard('en'))
+            await message.bot.send_photo(message.from_user.id, await fp.read(), reply_markup=await menu_keyboard('en'))
     elif lang == "ru":
         async with aiofiles.open("./images/helper_icon.jpg", 'rb') as fp:
-            await message.bot.send_photo(message.from_user.id, await fp.read(), "Главное меню", reply_markup=await menu_keyboard('ru'))
+            await message.bot.send_photo(message.from_user.id, await fp.read(), reply_markup=await menu_keyboard('ru'))
 
 async def help_callback(callback:CallbackQuery):
     await callback.answer()

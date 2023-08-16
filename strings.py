@@ -19,7 +19,7 @@ HELP_MESSAGE_RU = '''
 Вот команды, которые доступны в боте:
 /grammar - переход в режим проверки грамматики
 /menu - смена языка
-/pronunciation - переход в режим проверки произношения
+/phonetics - переход в режим fyfkbpf произношения
 /reset - сброс контекста
 /start - описание бота
 /subscribe - купить подписку
@@ -31,7 +31,7 @@ HELP_MESSAGE_EN = '''
 Here are the commands available in the bot:
 /grammar - switch to grammar check mode
 /menu - change language
-/pronunciation - switch to pronunciation check mode
+/phonetics - switch to pronunciation analise mode
 /reset - delete context 
 /start - description of the bot
 /subscribe - pay a subscription

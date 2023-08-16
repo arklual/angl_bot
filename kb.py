@@ -41,7 +41,7 @@ async def menu_keyboard(cur_lang):
             if mode["name"] != 'phonetics2':
                 main_menu.add(
                     types.InlineKeyboardButton(
-                        f'Turn on "{mode["verbose_name_en"]}" mode',
+                        f'Switch to "{mode["verbose_name_en"]}" mode',
                         callback_data=f'change_mode_{mode["name"]}'))
         main_menu.add(
             types.InlineKeyboardButton('Change voice', callback_data='voice'))

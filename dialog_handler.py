@@ -48,13 +48,12 @@ async def voice_handler(message: Message):
                     )
                     return
                 response = await request_to_gpt(message.from_user.id, text)
-                kb = ReplyKeyboardMarkup([
-                    ['Check grammar'],
-                ],
-                                        resize_keyboard=True,
+                kb = ReplyKeyboardMarkup(resize_keyboard=True,
                                         one_time_keyboard=True)
                 if (await get_context(message.chat.id))['mode'] == 'phonetics':
                     kb.add('Mark syllables and stresses')
+                if (await get_context(message.chat.id))['mode'] != 'grammar':
+                    kb.add('Check grammar')
                 await text_to_speech_send(message.bot,
                                         message.chat.id,
                                         response,
@@ -148,13 +147,12 @@ async def handle_all_messages(message: Message):
             )
             return
         response = await request_to_gpt(message.from_user.id, message.text)
-        kb = ReplyKeyboardMarkup([
-            ['Check grammar'],
-        ],
-                                resize_keyboard=True,
-                                one_time_keyboard=True)
+        kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         if (await get_context(message.chat.id))['mode'] == 'phonetics':
             kb.add('Mark syllables and stresses')
+        if (await get_context(message.chat.id))['mode'] != 'grammar':
+            kb.add('Check grammar')
+        
         await message.answer(response,
                             parse_mode=ParseMode.MARKDOWN,
                             reply_markup=kb)

@@ -118,7 +118,7 @@ async def ru_lang(callback_query: CallbackQuery):
 async def en_lang(callback_query: CallbackQuery):
     utils.set_user_language(callback_query.from_user.id, 'en')
     await callback_query.answer("Your lang have been changed to English")
-    await callback_query.message.answer("Main Menu\nHere you change modes and language", reply_markup=await menu_keyboard('en'))
+    await callback_query.message.answer("Main Menu", reply_markup=await menu_keyboard('en'))
     await callback_query.message.delete()
 
 async def voice(message: Message):

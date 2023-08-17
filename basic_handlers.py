@@ -39,7 +39,7 @@ async def start(message: Message):
 
     context = {
         'messages':[],
-        'mode': 'grammar',
+        'mode': 'talk',
         'is_male_voice': True,
     }
     lang = utils.get_user_language(message.from_user.id)

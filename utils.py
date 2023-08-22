@@ -163,7 +163,7 @@ async def request_to_gpt(user_id, text):
     num_tokens = len(encoding.encode(data_in_str))
     if num_tokens >= 3900:
         data[0] = {"role": "system", "content": 'summarize all this dialog'}
-        completion = openai.ChatCompletion.create(
+        completion = await openai.ChatCompletion.acreate(
             model="gpt-3.5-turbo",
             messages=data,
         )
@@ -191,7 +191,7 @@ async def request_to_gpt(user_id, text):
     top_p = mode_info['top_p']
     presence_penalty = mode_info['presence_penalty']
     frequency_penalty = mode_info['frequency_penalty']
-    completion = openai.ChatCompletion.create(
+    completion = await openai.ChatCompletion.acreate(
         model="gpt-3.5-turbo",
         messages=data,
         max_tokens=tokens,

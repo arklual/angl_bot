@@ -17,14 +17,14 @@ START_MESSAGES_EN = [
 
 HELP_MESSAGE_RU_1 = '''
 Справочное меню:
-Меню пользователя – информация о вашей подписке на использование Скилбадди. 
-Справочное меню - информация обо всех режимах и командах бота. 
-Как пользоваться – инструкция по практическому использованию бота с примерами, показывающая скрытые возможности Скилбадди. 
-Режим "Грамматика" – режим тренировки навыков письменного английского (грамматика, синтаксис, правописание, пунктуация). 
-Режим "Разговор" – режим тренировки навыков разговорного английского (режим бота по умолчанию), в котором вы можете построить диалог с Бадди на любую тему текстом или голосом. 
-Режим "Фонетика" – режим тренировки навыков устного английского (транскрипция, слогообразование, ударения) с 2-х этапным фонетическим анализом текста. 
-Смена голоса - выбор мужского или женского вариантов голоса Бадди для каждого из режимов. 
-Смена языка - выбор русского или английского языка для всех описаний и меню. 
+<b>Меню пользователя</b> – информация о вашей подписке на использование Скилбадди. 
+<b>Справочное меню</b> - информация обо всех режимах и командах бота. 
+<b>Как пользоваться</b> – инструкция по практическому использованию бота с примерами, показывающая скрытые возможности Скилбадди. 
+<b>Режим "Грамматика"</b> – режим тренировки навыков письменного английского (грамматика, синтаксис, правописание, пунктуация). 
+<b>Режим "Разговор"</b> – режим тренировки навыков разговорного английского (режим бота по умолчанию), в котором вы можете построить диалог с Бадди на любую тему текстом или голосом. 
+<b>Режим "Фонетика"</b> – режим тренировки навыков устного английского (транскрипция, слогообразование, ударения) с 2-х этапным фонетическим анализом текста. 
+<b>Смена голоса</b> - выбор мужского или женского вариантов голоса Бадди для каждого из режимов. 
+<b>Смена языка</b> - выбор русского или английского языка для всех описаний и меню. 
 '''
 HELP_MESSAGE_RU_2 = '''
 Команды, доступные в боте:
@@ -33,7 +33,8 @@ HELP_MESSAGE_RU_2 = '''
 /help – справочное меню
 /talk - переход в режим “Разговор“ (тренировка разговорного английского) 
 /grammar - переход в режим “Грамматика“
-(тренировка письменного английского) /phonetics - переход в режим “Фонетика“ (тренировка устного английского)
+(тренировка письменного английского) 
+/phonetics - переход в режим “Фонетика“ (тренировка устного английского)
 /tutorial – переход к инструкции, как пользоваться ботом, с наглядными  практическим примерами
 /reset – удалить контекст (начать новую сессию)
 /subscribe – информация о подписке
@@ -42,14 +43,14 @@ HELP_MESSAGE_RU_2 = '''
 
 HELP_MESSAGE_EN_1 = '''
 Help menu:
-User menu – information about your Skillbuddy subscription. 
-Help menu - information about all modes and commands of the bot.
-Tutorial – a manual for the practical use of the bot with examples, showing hidden capabilities of Skillbuddy. 
-"Grammar" mode – written English train mode (grammar, syntax, spelling, punctuation). 
-"Talk" mode - conversational English train mode (the default bot mode), in which you can build a dialogue with Buddy on any topic by text or voice. 
-"Phonetics" mode - verbal English train mode (transcription, syllable formation, stress) with a 2-stage phonetic analysis of the text. 
-Voice menu - select male or female versions of Buddy's voice for each of the modes. 
-Language menu - select Russian or English for all descriptions and menus. 
+<b>User menu</b> – information about your Skillbuddy subscription. 
+<b>Help menu</b> - information about all modes and commands of the bot.
+<b>Tutorial</b> – a manual for the practical use of the bot with examples, showing hidden capabilities of Skillbuddy. 
+<b>"Grammar" mode</b> – written English train mode (grammar, syntax, spelling, punctuation). 
+<b>"Talk" mode</b> - conversational English train mode (the default bot mode), in which you can build a dialogue with Buddy on any topic by text or voice. 
+<b>"Phonetics" mode</b> - verbal English train mode (transcription, syllable formation, stress) with a 2-stage phonetic analysis of the text. 
+<b>Voice menu</b> - select male or female versions of Buddy's voice for each of the modes. 
+<b>Language menu</b> - select Russian or English for all descriptions and menus. 
 '''
 HELP_MESSAGE_EN_2 = '''
 Commands available in the bot:

@@ -17,27 +17,16 @@ START_MESSAGES_EN = [
 
 HELP_MESSAGE_RU = '''
 Справочное меню:
-
 Меню пользователя – информация о вашей подписке на использование Скилбадди. 
-
 Справочное меню - информация обо всех режимах и командах бота. 
-
 Как пользоваться – инструкция по практическому использованию бота с примерами, показывающая скрытые возможности Скилбадди. 
-
 Режим "Грамматика" – режим тренировки навыков письменного английского (грамматика, синтаксис, правописание, пунктуация). 
-
 Режим "Разговор" – режим тренировки навыков разговорного английского (режим бота по умолчанию), в котором вы можете построить диалог с Бадди на любую тему текстом или голосом. 
-
 Режим "Фонетика" – режим тренировки навыков устного английского (транскрипция, слогообразование, ударения) с 2-х этапным фонетическим анализом текста. 
-
 Смена голоса - выбор мужского или женского вариантов голоса Бадди для каждого из режимов. 
-
 Смена языка - выбор русского или английского языка для всех описаний и меню. 
 
-
-
 Команды, доступные в боте:
-
 /start - экран приветствия с описанием бота
 /menu - основное меню
 /help – справочное меню
@@ -52,26 +41,16 @@ HELP_MESSAGE_RU = '''
 
 HELP_MESSAGE_EN = '''
 Help menu:
-
 User menu – information about your Skillbuddy subscription. 
-
 Help menu - information about all modes and commands of the bot.
-
 Tutorial – a manual for the practical use of the bot with examples, showing hidden capabilities of Skillbuddy. 
-
 "Grammar" mode – written English train mode (grammar, syntax, spelling, punctuation). 
-
 "Talk" mode - conversational English train mode (the default bot mode), in which you can build a dialogue with Buddy on any topic by text or voice. 
-
 "Phonetics" mode - verbal English train mode (transcription, syllable formation, stress) with a 2-stage phonetic analysis of the text. 
-
 Voice menu - select male or female versions of Buddy's voice for each of the modes. 
-
 Language menu - select Russian or English for all descriptions and menus. 
 
-
 Commands available in the bot:
-
 /start - welcome screen with a description of the bot 
 /menu - main menu
 /help - help menu

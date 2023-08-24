@@ -16,27 +16,73 @@ START_MESSAGES_EN = [
 ]
 
 HELP_MESSAGE_RU = '''
-Вот команды, которые доступны в боте:
-/grammar - переход в режим проверки грамматики
-/menu - смена языка
-/phonetics - переход в режим fyfkbpf произношения
-/reset - сброс контекста
-/start - описание бота
-/subscribe - купить подписку
-/talk - переход в свободное общение
-/voice - переход в режим голосовых сообщений
+Справочное меню:
+
+Меню пользователя – информация о вашей подписке на использование Скилбадди. 
+
+Справочное меню - информация обо всех режимах и командах бота. 
+
+Как пользоваться – инструкция по практическому использованию бота с примерами, показывающая скрытые возможности Скилбадди. 
+
+Режим "Грамматика" – режим тренировки навыков письменного английского (грамматика, синтаксис, правописание, пунктуация). 
+
+Режим "Разговор" – режим тренировки навыков разговорного английского (режим бота по умолчанию), в котором вы можете построить диалог с Бадди на любую тему текстом или голосом. 
+
+Режим "Фонетика" – режим тренировки навыков устного английского (транскрипция, слогообразование, ударения) с 2-х этапным фонетическим анализом текста. 
+
+Смена голоса - выбор мужского или женского вариантов голоса Бадди для каждого из режимов. 
+
+Смена языка - выбор русского или английского языка для всех описаний и меню. 
+
+
+
+Команды, доступные в боте:
+
+/start - экран приветствия с описанием бота
+/menu - основное меню
+/help – справочное меню
+/talk - переход в режим “Разговор“ (тренировка разговорного английского) 
+/grammar - переход в режим “Грамматика“
+(тренировка письменного английского) /phonetics - переход в режим “Фонетика“ (тренировка устного английского)
+/tutorial – переход к инструкции, как пользоваться ботом, с наглядными  практическим примерами
+/reset – удалить контекст (начать новую сессию)
+/subscribe – информация о подписке
+/voice - переход в режим голосового меню
 '''
 
 HELP_MESSAGE_EN = '''
-Here are the commands available in the bot:
-/grammar - switch to grammar check mode
-/menu - change language
-/phonetics - switch to pronunciation analise mode
-/reset - delete context 
-/start - description of the bot
-/subscribe - pay a subscription
-/talk - switch to free conversation mode
-/voice - switch to voice message mode
+Help menu:
+
+User menu – information about your Skillbuddy subscription. 
+
+Help menu - information about all modes and commands of the bot.
+
+Tutorial – a manual for the practical use of the bot with examples, showing hidden capabilities of Skillbuddy. 
+
+"Grammar" mode – written English train mode (grammar, syntax, spelling, punctuation). 
+
+"Talk" mode - conversational English train mode (the default bot mode), in which you can build a dialogue with Buddy on any topic by text or voice. 
+
+"Phonetics" mode - verbal English train mode (transcription, syllable formation, stress) with a 2-stage phonetic analysis of the text. 
+
+Voice menu - select male or female versions of Buddy's voice for each of the modes. 
+
+Language menu - select Russian or English for all descriptions and menus. 
+
+
+Commands available in the bot:
+
+/start - welcome screen with a description of the bot 
+/menu - main menu
+/help - help menu
+/talk – switch to the "Talk" mode (conversational English trainer)
+/grammar - switch to "Grammar" mode
+(written English trainer)
+/phonetics – switch to "Phonetics" mode (verbal English trainer). 
+/tutorial – instruction on how to use the bot, with illustrative practical examples. 
+/reset – clear context (start a new session)
+/subscribe - subscription details. 
+/voice - switch to voice menu mode. 
 '''
 
 def get_ref_link_text(n, url):

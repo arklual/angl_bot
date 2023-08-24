@@ -15,7 +15,7 @@ START_MESSAGES_EN = [
     "Hey, how are you? I am Skillbuddy, an Artificial Intelligence in the role of a native English speaker. I will recognize your verbal and written English and give advice on grammar & pronunciation skills."
 ]
 
-HELP_MESSAGE_RU = '''
+HELP_MESSAGE_RU_1 = '''
 Справочное меню:
 Меню пользователя – информация о вашей подписке на использование Скилбадди. 
 Справочное меню - информация обо всех режимах и командах бота. 
@@ -25,7 +25,8 @@ HELP_MESSAGE_RU = '''
 Режим "Фонетика" – режим тренировки навыков устного английского (транскрипция, слогообразование, ударения) с 2-х этапным фонетическим анализом текста. 
 Смена голоса - выбор мужского или женского вариантов голоса Бадди для каждого из режимов. 
 Смена языка - выбор русского или английского языка для всех описаний и меню. 
-
+'''
+HELP_MESSAGE_RU_2 = '''
 Команды, доступные в боте:
 /start - экран приветствия с описанием бота
 /menu - основное меню
@@ -39,7 +40,7 @@ HELP_MESSAGE_RU = '''
 /voice - переход в режим голосового меню
 '''
 
-HELP_MESSAGE_EN = '''
+HELP_MESSAGE_EN_1 = '''
 Help menu:
 User menu – information about your Skillbuddy subscription. 
 Help menu - information about all modes and commands of the bot.
@@ -49,7 +50,8 @@ Tutorial – a manual for the practical use of the bot with examples, showing hi
 "Phonetics" mode - verbal English train mode (transcription, syllable formation, stress) with a 2-stage phonetic analysis of the text. 
 Voice menu - select male or female versions of Buddy's voice for each of the modes. 
 Language menu - select Russian or English for all descriptions and menus. 
-
+'''
+HELP_MESSAGE_EN_2 = '''
 Commands available in the bot:
 /start - welcome screen with a description of the bot 
 /menu - main menu

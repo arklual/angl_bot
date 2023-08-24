@@ -69,10 +69,12 @@ async def help(message: Message):
     lang = utils.get_user_language(message.from_user.id)
     if lang == "en":
         async with aiofiles.open("./images/helper_icon_en.jpg", 'rb') as fp:
-            await message.bot.send_photo(message.from_user.id, await fp.read(), caption=HELP_MESSAGE_EN)
+            await message.bot.send_photo(message.from_user.id, await fp.read(), caption=HELP_MESSAGE_EN_1)
+            await message.answer(HELP_MESSAGE_EN_2)
     elif lang == "ru":
         async with aiofiles.open("./images/helper_icon.jpg", 'rb') as fp:
-            await message.bot.send_photo(message.from_user.id, await fp.read(), caption=HELP_MESSAGE_RU)
+            await message.bot.send_photo(message.from_user.id, await fp.read(), caption=HELP_MESSAGE_RU_1)
+            await message.answer(HELP_MESSAGE_RU_2)
 
 async def menu(message: Message):
     lang = utils.get_user_language(message.from_user.id)
@@ -88,10 +90,12 @@ async def help_callback(callback:CallbackQuery):
     lang = utils.get_user_language(callback.from_user.id)
     if lang == "en":
         async with aiofiles.open("./images/helper_icon_en.jpg", 'rb') as fp:
-            await callback.bot.send_photo(callback.from_user.id, await fp.read(), caption=HELP_MESSAGE_EN)
+            await callback.bot.send_photo(callback.from_user.id, await fp.read(), caption=HELP_MESSAGE_EN_1)
+            await callback.message.answer(HELP_MESSAGE_EN_2)
     elif lang == "ru":
         async with aiofiles.open("./images/helper_icon.jpg", 'rb') as fp:
-            await callback.bot.send_photo(callback.from_user.id, await fp.read(), caption=HELP_MESSAGE_RU)
+            await callback.bot.send_photo(callback.from_user.id, await fp.read(), caption=HELP_MESSAGE_RU_1)
+            await callback.message.answer(HELP_MESSAGE_RU_2)
     
 async def tutorial(message:Message):
   lang = utils.get_user_language(message.from_user.id)

@@ -64,6 +64,7 @@ async def text_to_speech_send(bot, chat_id, text, reply_markup=None):
                                 data=json.dumps(
                                     body, ensure_ascii=False)) as response:
             data = await response.json()
+            print(data)
             data = urlopen(data['audio_url']).read()
             f = tempfile.NamedTemporaryFile(delete=False)
             f.write(data)

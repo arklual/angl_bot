@@ -67,7 +67,10 @@ async def text_to_speech_send(bot, chat_id, text, reply_markup=None):
                 data = await response.json()
                 data = urlopen(data['audio_url']).read()
             except:
-                await bot.send_message(chat_id, text)
+                if reply_markup:
+                    await bot.send_message(chat_id, text, reply_markup=reply_markup)
+                else:
+                    await bot.send_message(chat_id, text)
                 print('CYBERVOICE ERROR:', await response.text())
                 return
             f = tempfile.NamedTemporaryFile(delete=False)

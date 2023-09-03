@@ -68,7 +68,7 @@ async def successful_payment(message: Message):
     new_entry = {
         'user_id': message.from_user.id,
         'date_exp':
-        (datetime.today() + timedelta(days=30)).strftime("%d/%m/%Y")
+        (datetime.today() + timedelta(days=3)).strftime("%d/%m/%Y")
     }
     await add_new_enry(new_entry)
     await message.answer(

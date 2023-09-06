@@ -32,7 +32,7 @@ async def clean_whitelist():
 
 async def on_start(_):
     aioschedule.every(1).day.at("00:00").do(check_subscribers)
-    aioschedule.every(1).day.at("00:00").do(clean_whitelist)
+    aioschedule.every(1).day.at("23:00").do(clean_whitelist)
     await register_all_handlers(dp)
 
 

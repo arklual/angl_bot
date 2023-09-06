@@ -1,3 +1,5 @@
+import json
+import aiofiles
 from aiogram import Dispatcher
 from aiogram.types import *
 from settings import ADMINS_ID
@@ -39,7 +41,8 @@ class ChangeVoiceMale(StatesGroup):
 class ChangeVoiceFemale(StatesGroup):
     voice_id = State()
     name_before = State()
-
+class ChangeWhitelist(StatesGroup):
+    whitelist = State()
 
 async def admin(message: Message):
     if str(message.from_user.id) not in ADMINS_ID:
@@ -69,6 +72,7 @@ async def mode_info(callback: CallbackQuery):
     mode = callback.data.split('dmin_mode_')[-1]
     mode = await utils.get_mode(mode)
     kb = InlineKeyboardMarkup()
+    kb.add(InlineKeyboardButton('Изменить whitelist', callback_data='admin_change_whitelist'))
     kb.add(InlineKeyboardButton('Изменить промпт', callback_data=f'admin_change_prompt_{mode["name"]}'))
     kb.add(InlineKeyboardButton('Изменить температуру', callback_data=f'admin_change_temperature_{mode["name"]}'))
     kb.add(InlineKeyboardButton('Изменить max_tokens', callback_data=f'admin_change_max_tokens_{mode["name"]}'))
@@ -263,6 +267,22 @@ async def delete_mode(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer("Режим удалён")
     await callback.message.delete()
 
+async def change_whitelist(callback: CallbackQuery, state: FSMContext):
+    await callback.answer()
+    await callback.message.answer('Введите новый список telegram_id, каждый с новой строки')
+    await state.set_state(ChangeWhitelist.whitelist)
+
+async def process_whitelist(message: Message, state: FSMContext):
+    await state.update_data(whitelist=message.text)
+    wl = message.text.splitlines()
+    await state.finish()
+    async with aiofiles.open('whitelist.json', 'w', encoding='utf-8') as fp:
+        await fp.write(json.dumps([{
+            'id': tid,
+        } for tid in wl],ensure_ascii=False))
+    await message.answer('Готово!')
+
+
 async def register_handlers(dp: Dispatcher):
     dp.register_message_handler(procces_new_prompt, state=ChangePromptForm.prompt)
     dp.register_message_handler(procces_new_temperature, state=ChangeTemperatureForm.temperature)
@@ -275,11 +295,13 @@ async def register_handlers(dp: Dispatcher):
     dp.register_message_handler(procces_new_name, state=ChangeNameForm.name)
     dp.register_message_handler(procces_new_verbose_name_ru, state=ChangeVerboseNameRuForm.verbose_name_ru)
     dp.register_message_handler(procces_new_verbose_name_en, state=ChangeVerboseNameEnForm.verbose_name_en)
+    dp.register_message_handler(process_whitelist, state=ChangeWhitelist.whitelist)
     dp.register_message_handler(admin, commands=['admin'])
     await admin_new_mode_form.register_handlers(dp)
 
 async def register_callbacks(dp: Dispatcher):
     dp.register_callback_query_handler(admin_callback, lambda c: c.data == 'admin')
+    dp.register_callback_query_handler(change_whitelist, lambda c: c.data == 'admin_change_whitelist')
     dp.register_callback_query_handler(change_prompt, lambda c: c.data.startswith('admin_change_prompt_'))
     dp.register_callback_query_handler(change_temperature, lambda c: c.data.startswith('admin_change_temperature_'))
     dp.register_callback_query_handler(change_max_tokens, lambda c: c.data.startswith('admin_change_max_tokens_'))

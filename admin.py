@@ -64,6 +64,7 @@ async def admin_callback(callback: CallbackQuery):
     for mode in modes:
         keyboard.add(InlineKeyboardButton(f'Посмотреть/отредактировать {mode["verbose_name_ru"]}', callback_data=f'admin_mode_{mode["name"]}'))
     keyboard.add(InlineKeyboardButton('Добавить режим', callback_data='admin_add_mode'))
+    keyboard.add(InlineKeyboardButton('Изменить whitelist', callback_data='admin_change_whitelist'))
     await callback.message.answer('Что вы хотите сделать?', reply_markup=keyboard)
     await callback.message.delete()
 
@@ -72,7 +73,6 @@ async def mode_info(callback: CallbackQuery):
     mode = callback.data.split('dmin_mode_')[-1]
     mode = await utils.get_mode(mode)
     kb = InlineKeyboardMarkup()
-    kb.add(InlineKeyboardButton('Изменить whitelist', callback_data='admin_change_whitelist'))
     kb.add(InlineKeyboardButton('Изменить промпт', callback_data=f'admin_change_prompt_{mode["name"]}'))
     kb.add(InlineKeyboardButton('Изменить температуру', callback_data=f'admin_change_temperature_{mode["name"]}'))
     kb.add(InlineKeyboardButton('Изменить max_tokens', callback_data=f'admin_change_max_tokens_{mode["name"]}'))

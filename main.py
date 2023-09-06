@@ -26,9 +26,13 @@ async def check_subscribers():
     async with aiofiles.open('payments.json', 'w', encoding='utf-8') as fp:
         await fp.write(json.dumps(new_subscribers, ensure_ascii=False))
 
+async def clean_whitelist():
+    async with aiofiles.open('whitelist.json', 'w', encoding='utf-8') as fp:
+        await fp.write('[]')
 
 async def on_start(_):
     aioschedule.every(1).day.at("00:00").do(check_subscribers)
+    aioschedule.every(1).day.at("00:00").do(clean_whitelist)
     await register_all_handlers(dp)
 
 

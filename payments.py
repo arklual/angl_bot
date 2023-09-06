@@ -103,7 +103,7 @@ async def check_subscription(user_id):
     for s in wl:
         if s['id'] == str(user_id):
             user_is_subscriber = True
-            return 10000
+            return 1
     if not user_is_subscriber:
         return False
         

@@ -53,6 +53,7 @@ async def admin(message: Message):
     for mode in modes:
         keyboard.add(InlineKeyboardButton(f'Посмотреть/отредактировать {mode["verbose_name_ru"]}', callback_data=f'admin_mode_{mode["name"]}'))
     keyboard.add(InlineKeyboardButton('Добавить режим', callback_data='admin_add_mode'))
+    keyboard.add(InlineKeyboardButton('Изменить whitelist', callback_data='admin_change_whitelist'))
     await message.answer('Что вы хотите сделать?', reply_markup=keyboard)
 
 async def admin_callback(callback: CallbackQuery):

@@ -96,7 +96,7 @@ async def check_subscription(user_id):
     for s in subscribers:
         if s['user_id'] == user_id:
             user_is_subscriber = True
-            return (datetime.strptime(s['date_exp'], '%d/%m/%Y') - datetime.today()).days
+            return str((datetime.strptime(s['date_exp'], '%d/%m/%Y') - datetime.today()).days)
     wl = []
     async with aiofiles.open('whitelist.json', 'r', encoding='utf-8') as fp:
         wl = json.loads(await fp.read())

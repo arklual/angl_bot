@@ -81,7 +81,13 @@ async def add_new_enry(new_entry):
                              encoding='utf-8') as file:
         content = await file.read()
         data_list = json.loads(content)
-    data_list.append(new_entry)
+    exist = False
+    for n, i in enumerate(data_list):
+        if i['user_id'] == new_entry['user_id']:
+            data_list[i] = new_entry
+            exist = True
+    if not exist:
+        data_list.append(new_entry)
     async with aiofiles.open('payments.json', mode="w",
                              encoding='utf-8') as file:
         await file.write(json.dumps(data_list, indent=4, ensure_ascii=False))

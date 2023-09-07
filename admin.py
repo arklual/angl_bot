@@ -54,6 +54,7 @@ async def admin(message: Message):
         keyboard.add(InlineKeyboardButton(f'Посмотреть/отредактировать {mode["verbose_name_ru"]}', callback_data=f'admin_mode_{mode["name"]}'))
     keyboard.add(InlineKeyboardButton('Добавить режим', callback_data='admin_add_mode'))
     keyboard.add(InlineKeyboardButton('Изменить whitelist', callback_data='admin_change_whitelist'))
+    keyboard.add(InlineKeyboardButton('Показать whitelist', callback_data='admin_view_whitelist'))
     await message.answer('Что вы хотите сделать?', reply_markup=keyboard)
 
 async def admin_callback(callback: CallbackQuery):
@@ -267,6 +268,15 @@ async def delete_mode(callback: CallbackQuery, state: FSMContext):
     await utils.delete_mode(mode)
     await callback.message.answer("Режим удалён")
     await callback.message.delete()
+
+async def view_whitelist(callback: CallbackQuery, state: FSMContext):
+    await callback.answer()
+    s = ''
+    async with aiofiles.open('whitelist.json', 'r', encoding='utf-8') as fp:
+        ids = json.loads(await fp.read())
+        for i in ids:
+            s += (i['id']+'\n')
+    await callback.message.answer(s)
 
 async def change_whitelist(callback: CallbackQuery, state: FSMContext):
     await callback.answer()

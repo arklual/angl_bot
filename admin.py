@@ -313,6 +313,7 @@ async def register_handlers(dp: Dispatcher):
 async def register_callbacks(dp: Dispatcher):
     dp.register_callback_query_handler(admin_callback, lambda c: c.data == 'admin')
     dp.register_callback_query_handler(change_whitelist, lambda c: c.data == 'admin_change_whitelist')
+    dp.register_callback_query_handler(view_whitelist, lambda c: c.data == 'admin_view_whitelist')
     dp.register_callback_query_handler(change_prompt, lambda c: c.data.startswith('admin_change_prompt_'))
     dp.register_callback_query_handler(change_temperature, lambda c: c.data.startswith('admin_change_temperature_'))
     dp.register_callback_query_handler(change_max_tokens, lambda c: c.data.startswith('admin_change_max_tokens_'))

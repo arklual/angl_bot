@@ -100,9 +100,9 @@ async def help_callback(callback:CallbackQuery):
 async def tutorial(message:Message):
   lang = utils.get_user_language(message.from_user.id)
   if lang == "en":
-    await message.answer('Tutorial')
+    await message.answer('https://goo.su/2EPwdz')
   elif lang == "ru":
-    await message.answer('Туториал')
+    await message.answer('https://telegra.ph/Kak-pravilno-obrashchatsya-s-botom-Skilbaddi-08-19')
 
 async def tutorial_callback(callback: CallbackQuery):
   await callback.answer()

@@ -44,10 +44,17 @@ async def voice_handler(message: Message):
                 if lang != 'ru' and lang != 'en':
                     await text_to_speech_send(
                         message.bot, message.chat.id,
-                        "Hey there! Looks like we speak different languages. Let's get back to English."
+                        "Sorry! Please use English!"
                     )
                     return
                 response = await request_to_gpt(message.from_user.id, text)
+                lang = list(langid.classify(message.text))[0]
+                if lang != 'en':
+                    await text_to_speech_send(
+                        message.bot, message.chat.id,
+                        "Sorry! Please use English!"
+                    )
+                    return
                 kb = ReplyKeyboardMarkup([
                     ['Check grammar'],
                 ],
@@ -148,10 +155,16 @@ async def handle_all_messages(message: Message):
         lang = list(langid.classify(message.text))[0]
         if lang != 'ru' and lang != 'en':
             await message.answer(
-                "Hey there! Looks like we speak different languages. Let's get back to English."
+                "Sorry! Please use English!"
             )
             return
         response = await request_to_gpt(message.from_user.id, message.text)
+        lang = list(langid.classify(message.text))[0]
+        if lang != 'en':
+            await message.answer(
+                "Sorry! Please use English!"
+            )
+            return
         kb = ReplyKeyboardMarkup([
             ['Check grammar'],
         ],

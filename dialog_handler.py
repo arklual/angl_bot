@@ -42,20 +42,13 @@ async def voice_handler(message: Message):
                         )
                     return
                 lang = list(langid.classify(text))[0]
-                if lang != 'ru' and lang != 'en':
-                    await text_to_speech_send(
-                        message.bot, message.chat.id,
-                        "Sorry! Please use English!"
-                    )
-                    return
-                response = await request_to_gpt(message.from_user.id, text)
-                lang = list(langid.classify(message.text))[0]
                 if lang != 'en':
                     await text_to_speech_send(
                         message.bot, message.chat.id,
                         "Sorry! Please use English!"
                     )
                     return
+                response = await request_to_gpt(message.from_user.id, text)
                 kb = ReplyKeyboardMarkup([
                     ['Check grammar'],
                 ],
@@ -157,18 +150,12 @@ async def handle_all_messages(message: Message):
                 await text_to_speech_send(message.bot, message.chat.id, response)
                 return
         lang = list(langid.classify(message.text))[0]
-        if lang != 'ru' and lang != 'en':
-            await message.answer(
-                "Sorry! Please use English!"
-            )
-            return
-        response = await request_to_gpt(message.from_user.id, message.text)
-        lang = list(langid.classify(message.text))[0]
         if lang != 'en':
             await message.answer(
                 "Sorry! Please use English!"
             )
             return
+        response = await request_to_gpt(message.from_user.id, message.text)
         kb = ReplyKeyboardMarkup([
             ['Check grammar'],
         ],
@@ -235,7 +222,7 @@ async def msas(message: Message):
             )
             return
         lang = list(langid.classify(str(message_to_check)))[0]
-        if lang != 'ru' and lang != 'en':
+        if lang != 'en':
             await message.answer(
                 "Sorry! Please use English!"
             )

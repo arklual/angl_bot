@@ -7,6 +7,7 @@ from strings import *
 import langid
 import os
 import speech_recognition as sr
+from settings import ADMINS_ID
 
 
 async def voice_handler(message: Message):
@@ -148,6 +149,8 @@ async def handle_all_messages(message: Message):
                             return
                     except Exception as e:
                         await message.answer("I didn't get it")
+                        if str(message.from_user.id) in ADMINS_ID:
+                            await message.answer(str(e))
                 response = await request_to_gpt(message.from_user.id, text)
                 await create_new_context(message.from_user.id, context)
                 await text_to_speech_send(message.bot, message.chat.id, response)
@@ -200,7 +203,7 @@ async def check_grammar_once(message: Message):
         lang = list(langid.classify(str(message_to_check)))[0]
         if lang != 'ru' and lang != 'en':
             await message.answer(
-                "Hey there! Looks like we speak different languages. Let's get back to English."
+                "Sorry! Please use English!"
             )
             return
         await create_new_context(
@@ -233,7 +236,7 @@ async def msas(message: Message):
         lang = list(langid.classify(str(message_to_check)))[0]
         if lang != 'ru' and lang != 'en':
             await message.answer(
-                "Hey there! Looks like we speak different languages. Let's get back to English."
+                "Sorry! Please use English!"
             )
             return
         await create_new_context(

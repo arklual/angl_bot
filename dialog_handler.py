@@ -150,7 +150,8 @@ async def handle_all_messages(message: Message):
                     except Exception as e:
                         await message.answer("I didn't get it")
                         if str(message.from_user.id) in ADMINS_ID:
-                            await message.answer(str(e))
+                            try: await message.answer(str(e))
+                            except: pass
                 response = await request_to_gpt(message.from_user.id, text)
                 await create_new_context(message.from_user.id, context)
                 await text_to_speech_send(message.bot, message.chat.id, response)

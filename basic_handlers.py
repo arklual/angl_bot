@@ -1,8 +1,10 @@
+import datetime
 import random
 from aiogram.dispatcher import FSMContext
 from aiogram import Dispatcher
 from aiogram.types import *
 from kb import menu_keyboard
+from payments import add_new_enry
 import utils
 from strings import *
 import aiofiles
@@ -25,6 +27,12 @@ async def start(message: Message):
     user_exists = any(entry["user_id"] == user_id for entry in data)
     if not user_exists:
       start_command = message.text
+      new_entry = {
+            'user_id': message.from_user.id,
+            'date_exp':
+            (datetime.today() + datetime.timedelta(days=3)).strftime("%d/%m/%Y")
+      }
+      await add_new_enry(new_entry)
       referer_id = start_command[7:]
       if referer_id:
         referer_id = int(referer_id)
